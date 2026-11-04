@@ -1,15 +1,19 @@
-name: React Best Practices CI
+name: "Skills: validate & build"
 
 on:
   push:
     branches: [main]
     paths:
       - 'skills/react-best-practices/**'
+      - 'skills/composition-patterns/**'
+      - 'skills/react-native-skills/**'
       - 'packages/react-best-practices-build/**'
   pull_request:
     branches: [main]
     paths:
       - 'skills/react-best-practices/**'
+      - 'skills/composition-patterns/**'
+      - 'skills/react-native-skills/**'
       - 'packages/react-best-practices-build/**'
 
 jobs:
@@ -20,7 +24,7 @@ jobs:
         working-directory: packages/react-best-practices-build
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.24.0
       - uses: actions/setup-node@v4
@@ -28,6 +32,9 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
           cache-dependency-path: packages/react-best-practices-build/pnpm-lock.yaml
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
       - run: pnpm validate
       - run: pnpm build
+      # Runs from working-directory, so paths to skills/ are relative to packages/react-best-practices-build.
+      - name: Drift gate (generated files match committed output)
+        run: git diff --exit-code -- ../../skills/react-best-practices/AGENTS.md ../../skills/composition-patterns/AGENTS.md ../../skills/react-native-skills/AGENTS.md test-cases.json test-cases.composition-patterns.json test-cases.react-native-skills.json || (echo "::error::Generated files are stale. Run 'pnpm build' in packages/react-best-practices-build and commit." && exit 1)
