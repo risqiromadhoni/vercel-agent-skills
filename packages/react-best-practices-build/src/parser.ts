@@ -12,6 +12,45 @@ export interface RuleFile {
   rule: Rule
 }
 
+// Lines that keep their own line in prose: list items, table rows and blockquote lines
+const OWN_LINE = /^\s*(?:[-*]\s|\d+\.\s|[|>])/
+
+/**
+ * Group prose lines into markdown paragraphs. Hard-wrapped lines join with a single
+ * space, blank lines separate paragraphs, and OWN_LINE lines keep their own lines.
+ * Callers pass prose only; fenced code never reaches this function.
+ */
+function formatProse(lines: string[]): string {
+  const paragraphs: string[] = []
+  let block: string[] = []
+  let lastIsProse = false
+
+  const endParagraph = () => {
+    if (block.length > 0) paragraphs.push(block.join('\n'))
+    block = []
+    lastIsProse = false
+  }
+
+  for (const raw of lines) {
+    const text = raw.trim()
+    if (!text) {
+      endParagraph()
+    } else if (OWN_LINE.test(raw)) {
+      block.push(raw.trimEnd())
+      lastIsProse = false
+    } else if (block.length > 0 && (lastIsProse || /^\s/.test(raw))) {
+      // Hard-wrapped prose continues the line above; an indented line continues a list item
+      block[block.length - 1] += ` ${text}`
+    } else {
+      block.push(text)
+      lastIsProse = true
+    }
+  }
+  endParagraph()
+
+  return paragraphs.join('\n\n')
+}
+
 /**
  * Parse a rule markdown file into a Rule object
  */
@@ -61,7 +100,7 @@ export async function parseRuleFile(
   // Extract impact
   let impact: Rule['impact'] = 'MEDIUM'
   let impactDescription = ''
-  let explanation = ''
+  const explanationLines: string[] = []
   let examples: Rule['examples'] = []
   let references: string[] = []
 
@@ -130,7 +169,7 @@ export async function parseRuleFile(
       // Save previous example if it exists
       if (currentExample) {
         if (additionalText.length > 0) {
-          currentExample.additionalText = additionalText.join('\n\n')
+          currentExample.additionalText = formatProse(additionalText)
           additionalText = []
         }
         examples.push(currentExample)
@@ -158,7 +197,7 @@ export async function parseRuleFile(
       // Save current example before processing references
       if (currentExample) {
         if (additionalText.length > 0) {
-          currentExample.additionalText = additionalText.join('\n\n')
+          currentExample.additionalText = formatProse(additionalText)
           additionalText = []
         }
         examples.push(currentExample)
@@ -177,11 +216,12 @@ export async function parseRuleFile(
       continue
     }
 
-    // Regular text (explanation or additional context after examples)
-    if (line.trim() && !line.startsWith('#')) {
+    // Regular text (explanation or additional context after examples).
+    // Blank lines are kept so formatProse can separate paragraphs.
+    if (!line.startsWith('#')) {
       if (!currentExample && !inCodeBlock) {
         // Main explanation before any examples
-        explanation += (explanation ? '\n\n' : '') + line
+        explanationLines.push(line)
       } else if (
         currentExample &&
         (afterCodeBlock || !hasCodeBlockForCurrentExample)
@@ -196,7 +236,7 @@ export async function parseRuleFile(
   // Handle last example if still open
   if (currentExample) {
     if (additionalText.length > 0) {
-      currentExample.additionalText = additionalText.join('\n\n')
+      currentExample.additionalText = formatProse(additionalText)
     }
     examples.push(currentExample)
   }
@@ -243,7 +283,7 @@ export async function parseRuleFile(
     subsection: undefined,
     impact: frontmatter.impact || impact,
     impactDescription: frontmatter.impactDescription || impactDescription,
-    explanation: frontmatter.explanation || explanation.trim(),
+    explanation: frontmatter.explanation || formatProse(explanationLines),
     examples,
     references: frontmatter.references
       ? frontmatter.references.split(',').map((r: string) => r.trim())

@@ -33,6 +33,8 @@ packages/
     package.json  # also has react-native-reanimated
 ```
 
+**Correct (app package.json also lists the dep):**
+
 ```json
 // packages/app/package.json
 {

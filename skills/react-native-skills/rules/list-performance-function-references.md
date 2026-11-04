@@ -112,8 +112,7 @@ function DomainItem({ tld }: { tld: Tld }) {
 Virtualization can now skip items that haven't changed when typing. Only visible
 items (~20) re-render on keystroke, rather than the parent.
 
-**Deriving state within list items based on parent data (avoids parent
-re-renders):**
+**Deriving state within list items based on parent data (avoids parent re-renders):**
 
 For components where the data is conditional based on the parent state, this
 pattern is even more important. For example, if you are checking if an item is

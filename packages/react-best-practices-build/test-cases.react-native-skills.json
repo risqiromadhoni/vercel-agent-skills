@@ -1,0 +1,902 @@
+[
+  {
+    "skill": "react-native-skills",
+    "ruleId": "1.1",
+    "ruleTitle": "Never Use && with Potentially Falsy Values",
+    "type": "bad",
+    "code": "function Profile({ name, count }: { name: string; count: number }) {\n  return (\n    <View>\n      {name && <Text>{name}</Text>}\n      {count && <Text>{count} items</Text>}\n    </View>\n  )\n}\n// If name=\"\" or count=0, renders the falsy value → crash",
+    "language": "tsx",
+    "description": "crashes if count is 0 or name is \"\""
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "1.1",
+    "ruleTitle": "Never Use && with Potentially Falsy Values",
+    "type": "good",
+    "code": "function Profile({ name, count }: { name: string; count: number }) {\n  return (\n    <View>\n      {name ? <Text>{name}</Text> : null}\n      {count ? <Text>{count} items</Text> : null}\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "ternary with null"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "1.1",
+    "ruleTitle": "Never Use && with Potentially Falsy Values",
+    "type": "good",
+    "code": "function Profile({ name, count }: { name: string; count: number }) {\n  return (\n    <View>\n      {!!name && <Text>{name}</Text>}\n      {!!count && <Text>{count} items</Text>}\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "explicit boolean coercion"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "1.2",
+    "ruleTitle": "Wrap Strings in Text Components",
+    "type": "bad",
+    "code": "import { View } from 'react-native'\n\nfunction Greeting({ name }: { name: string }) {\n  return <View>Hello, {name}!</View>\n}\n// Error: Text strings must be rendered within a <Text> component.",
+    "language": "tsx",
+    "description": "crashes"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "1.2",
+    "ruleTitle": "Wrap Strings in Text Components",
+    "type": "good",
+    "code": "import { View, Text } from 'react-native'\n\nfunction Greeting({ name }: { name: string }) {\n  return (\n    <View>\n      <Text>Hello, {name}!</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "Correct example for Wrap Strings in Text Components"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.1",
+    "ruleTitle": "Avoid Inline Objects in renderItem",
+    "type": "bad",
+    "code": "function UserList({ users }: { users: User[] }) {\n  return (\n    <LegendList\n      data={users}\n      renderItem={({ item }) => (\n        <UserRow\n          // Bad: new object on every render\n          user={{ id: item.id, name: item.name, avatar: item.avatar }}\n        />\n      )}\n    />\n  )\n}",
+    "language": "tsx",
+    "description": "inline object breaks memoization"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.1",
+    "ruleTitle": "Avoid Inline Objects in renderItem",
+    "type": "bad",
+    "code": "renderItem={({ item }) => (\n  <UserRow\n    name={item.name}\n    // Bad: new style object on every render\n    style={{ backgroundColor: item.isActive ? 'green' : 'gray' }}\n  />\n)}",
+    "language": "tsx",
+    "description": "inline style object"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.1",
+    "ruleTitle": "Avoid Inline Objects in renderItem",
+    "type": "good",
+    "code": "function UserList({ users }: { users: User[] }) {\n  return (\n    <LegendList\n      data={users}\n      renderItem={({ item }) => (\n        // Good: pass the item directly\n        <UserRow user={item} />\n      )}\n    />\n  )\n}",
+    "language": "tsx",
+    "description": "pass item directly or primitives"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.1",
+    "ruleTitle": "Avoid Inline Objects in renderItem",
+    "type": "good",
+    "code": "renderItem={({ item }) => (\n  <UserRow\n    id={item.id}\n    name={item.name}\n    isActive={item.isActive}\n  />\n)}\n\nconst UserRow = memo(function UserRow({ id, name, isActive }: Props) {\n  // Good: derive style inside memoized component\n  const backgroundColor = isActive ? 'green' : 'gray'\n  return <View style={[styles.row, { backgroundColor }]}>{/* ... */}</View>\n})",
+    "language": "tsx",
+    "description": "pass primitives, derive inside child"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.1",
+    "ruleTitle": "Avoid Inline Objects in renderItem",
+    "type": "good",
+    "code": "const activeStyle = { backgroundColor: 'green' }\nconst inactiveStyle = { backgroundColor: 'gray' }\n\nrenderItem={({ item }) => (\n  <UserRow\n    name={item.name}\n    // Good: stable references\n    style={item.isActive ? activeStyle : inactiveStyle}\n  />\n)}",
+    "language": "tsx",
+    "description": "hoist static styles in module scope"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.2",
+    "ruleTitle": "Hoist callbacks to the root of lists",
+    "type": "bad",
+    "code": "return (\n  <LegendList\n    renderItem={({ item }) => {\n      // bad: creates a new callback on each render\n      const onPress = () => handlePress(item.id)\n      return <Item key={item.id} item={item} onPress={onPress} />\n    }}\n  />\n)",
+    "language": "typescript",
+    "description": "creates a new callback on each render"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.2",
+    "ruleTitle": "Hoist callbacks to the root of lists",
+    "type": "good",
+    "code": "const onPress = useCallback(() => handlePress(item.id), [handlePress, item.id])\n\nreturn (\n  <LegendList\n    renderItem={({ item }) => (\n      <Item key={item.id} item={item} onPress={onPress} />\n    )}\n  />\n)",
+    "language": "typescript",
+    "description": "a single function instance passed to each item"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.3",
+    "ruleTitle": "Keep List Items Lightweight",
+    "type": "bad",
+    "code": "function ProductRow({ id }: { id: string }) {\n  // Bad: query inside list item\n  const { data: product } = useQuery(['product', id], () => fetchProduct(id))\n  // Bad: multiple context accesses\n  const theme = useContext(ThemeContext)\n  const user = useContext(UserContext)\n  const cart = useContext(CartContext)\n  // Bad: expensive computation\n  const recommendations = useMemo(\n    () => computeRecommendations(product),\n    [product]\n  )\n\n  return <View>{/* ... */}</View>\n}",
+    "language": "tsx",
+    "description": "heavy list item"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.3",
+    "ruleTitle": "Keep List Items Lightweight",
+    "type": "good",
+    "code": "function ProductRow({ name, price, imageUrl }: Props) {\n  // Good: receives only primitives, minimal hooks\n  return (\n    <View>\n      <Image source={{ uri: imageUrl }} />\n      <Text>{name}</Text>\n      <Text>{price}</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "lightweight list item"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.4",
+    "ruleTitle": "Optimize List Performance with Stable Object References",
+    "type": "bad",
+    "code": "function DomainSearch() {\n  const { keyword, setKeyword } = useKeywordZustandState()\n  const { data: tlds } = useTlds()\n\n  // Bad: creates new objects on every render, reparenting the entire list on every keystroke\n  const domains = tlds.map((tld) => ({\n    domain: `${keyword}.${tld.name}`,\n    tld: tld.name,\n    price: tld.price,\n  }))\n\n  return (\n    <>\n      <TextInput value={keyword} onChangeText={setKeyword} />\n      <LegendList\n        data={domains}\n        renderItem={({ item }) => <DomainItem item={item} keyword={keyword} />}\n      />\n    </>\n  )\n}",
+    "language": "tsx",
+    "description": "creates new object references on every keystroke"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.4",
+    "ruleTitle": "Optimize List Performance with Stable Object References",
+    "type": "good",
+    "code": "const renderItem = ({ item }) => <DomainItem tld={item} />\n\nfunction DomainSearch() {\n  const { data: tlds } = useTlds()\n\n  return (\n    <LegendList\n      // good: as long as the data is stable, LegendList will not re-render the entire list\n      data={tlds}\n      renderItem={renderItem}\n    />\n  )\n}\n\nfunction DomainItem({ tld }: { tld: Tld }) {\n  // good: transform within items, and don't pass the dynamic data as a prop\n  // good: use a selector function from zustand to receive a stable string back\n  const domain = useKeywordZustandState((s) => s.keyword + '.' + tld.name)\n  return <Text>{domain}</Text>\n}",
+    "language": "tsx",
+    "description": "stable references, transform inside items"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.5",
+    "ruleTitle": "Pass Primitives to List Items for Memoization",
+    "type": "bad",
+    "code": "type User = { id: string; name: string; email: string; avatar: string }\n\nconst UserRow = memo(function UserRow({ user }: { user: User }) {\n  // memo() compares user by reference, not value\n  // If parent creates new user object, this re-renders even if data is same\n  return <Text>{user.name}</Text>\n})\n\nrenderItem={({ item }) => <UserRow user={item} />}",
+    "language": "tsx",
+    "description": "object prop requires deep comparison"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.5",
+    "ruleTitle": "Pass Primitives to List Items for Memoization",
+    "type": "good",
+    "code": "const UserRow = memo(function UserRow({\n  id,\n  name,\n  email,\n}: {\n  id: string\n  name: string\n  email: string\n}) {\n  // memo() compares each primitive directly\n  // Re-renders only if id, name, or email actually changed\n  return <Text>{name}</Text>\n})\n\nrenderItem={({ item }) => (\n  <UserRow id={item.id} name={item.name} email={item.email} />\n)}",
+    "language": "tsx",
+    "description": "primitive props enable shallow comparison"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.6",
+    "ruleTitle": "Use a List Virtualizer for Any List",
+    "type": "bad",
+    "code": "function Feed({ items }: { items: Item[] }) {\n  return (\n    <ScrollView>\n      {items.map((item) => (\n        <ItemCard key={item.id} item={item} />\n      ))}\n    </ScrollView>\n  )\n}\n// 50 items = 50 components mounted, even if only 10 visible",
+    "language": "tsx",
+    "description": "ScrollView renders all items at once"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.6",
+    "ruleTitle": "Use a List Virtualizer for Any List",
+    "type": "good",
+    "code": "import { LegendList } from '@legendapp/list'\n\nfunction Feed({ items }: { items: Item[] }) {\n  return (\n    <LegendList\n      data={items}\n      // if you aren't using React Compiler, wrap these with useCallback\n      renderItem={({ item }) => <ItemCard item={item} />}\n      keyExtractor={(item) => item.id}\n      estimatedItemSize={80}\n    />\n  )\n}\n// Only ~10-15 visible items mounted at a time",
+    "language": "tsx",
+    "description": "virtualizer renders only visible items"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.7",
+    "ruleTitle": "Use Compressed Images in Lists",
+    "type": "bad",
+    "code": "function ProductItem({ product }: { product: Product }) {\n  return (\n    <View>\n      {/* 4000x3000 image loaded for a 100x100 thumbnail */}\n      <Image\n        source={{ uri: product.imageUrl }}\n        style={{ width: 100, height: 100 }}\n      />\n      <Text>{product.name}</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "full-resolution images"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.7",
+    "ruleTitle": "Use Compressed Images in Lists",
+    "type": "good",
+    "code": "function ProductItem({ product }: { product: Product }) {\n  // Request a 200x200 image (2x for retina)\n  const thumbnailUrl = `${product.imageUrl}?w=200&h=200&fit=cover`\n\n  return (\n    <View>\n      <Image\n        source={{ uri: thumbnailUrl }}\n        style={{ width: 100, height: 100 }}\n        contentFit='cover'\n      />\n      <Text>{product.name}</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "request appropriately-sized image"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.8",
+    "ruleTitle": "Use Item Types for Heterogeneous Lists",
+    "type": "bad",
+    "code": "type Item = { id: string; text?: string; imageUrl?: string; isHeader?: boolean }\n\nfunction ListItem({ item }: { item: Item }) {\n  if (item.isHeader) {\n    return <HeaderItem title={item.text} />\n  }\n  if (item.imageUrl) {\n    return <ImageItem url={item.imageUrl} />\n  }\n  return <MessageItem text={item.text} />\n}\n\nfunction Feed({ items }: { items: Item[] }) {\n  return (\n    <LegendList\n      data={items}\n      renderItem={({ item }) => <ListItem item={item} />}\n      recycleItems\n    />\n  )\n}",
+    "language": "tsx",
+    "description": "single component with conditionals"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "2.8",
+    "ruleTitle": "Use Item Types for Heterogeneous Lists",
+    "type": "good",
+    "code": "type HeaderItem = { id: string; type: 'header'; title: string }\ntype MessageItem = { id: string; type: 'message'; text: string }\ntype ImageItem = { id: string; type: 'image'; url: string }\ntype FeedItem = HeaderItem | MessageItem | ImageItem\n\nfunction Feed({ items }: { items: FeedItem[] }) {\n  return (\n    <LegendList\n      data={items}\n      keyExtractor={(item) => item.id}\n      getItemType={(item) => item.type}\n      renderItem={({ item }) => {\n        switch (item.type) {\n          case 'header':\n            return <SectionHeader title={item.title} />\n          case 'message':\n            return <MessageRow text={item.text} />\n          case 'image':\n            return <ImageRow url={item.url} />\n        }\n      }}\n      recycleItems\n    />\n  )\n}",
+    "language": "tsx",
+    "description": "typed items with separate components"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.1",
+    "ruleTitle": "Animate Transform and Opacity Instead of Layout Properties",
+    "type": "bad",
+    "code": "import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'\n\nfunction CollapsiblePanel({ expanded }: { expanded: boolean }) {\n  const animatedStyle = useAnimatedStyle(() => ({\n    height: withTiming(expanded ? 200 : 0), // triggers layout on every frame\n    overflow: 'hidden',\n  }))\n\n  return <Animated.View style={animatedStyle}>{children}</Animated.View>\n}",
+    "language": "tsx",
+    "description": "animates height, triggers layout every frame"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.1",
+    "ruleTitle": "Animate Transform and Opacity Instead of Layout Properties",
+    "type": "good",
+    "code": "import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'\n\nfunction CollapsiblePanel({ expanded }: { expanded: boolean }) {\n  const animatedStyle = useAnimatedStyle(() => ({\n    transform: [\n      { scaleY: withTiming(expanded ? 1 : 0) },\n    ],\n    opacity: withTiming(expanded ? 1 : 0),\n  }))\n\n  return (\n    <Animated.View style={[{ height: 200, transformOrigin: 'top' }, animatedStyle]}>\n      {children}\n    </Animated.View>\n  )\n}",
+    "language": "tsx",
+    "description": "animates scaleY, GPU-accelerated"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.1",
+    "ruleTitle": "Animate Transform and Opacity Instead of Layout Properties",
+    "type": "good",
+    "code": "import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'\n\nfunction SlideIn({ visible }: { visible: boolean }) {\n  const animatedStyle = useAnimatedStyle(() => ({\n    transform: [\n      { translateY: withTiming(visible ? 0 : 100) },\n    ],\n    opacity: withTiming(visible ? 1 : 0),\n  }))\n\n  return <Animated.View style={animatedStyle}>{children}</Animated.View>\n}",
+    "language": "tsx",
+    "description": "animates translateY for slide animations"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.2",
+    "ruleTitle": "Prefer useDerivedValue Over useAnimatedReaction",
+    "type": "bad",
+    "code": "import { useSharedValue, useAnimatedReaction } from 'react-native-reanimated'\n\nfunction MyComponent() {\n  const progress = useSharedValue(0)\n  const opacity = useSharedValue(1)\n\n  useAnimatedReaction(\n    () => progress.value,\n    (current) => {\n      opacity.value = 1 - current\n    }\n  )\n\n  // ...\n}",
+    "language": "tsx",
+    "description": "useAnimatedReaction for derivation"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.2",
+    "ruleTitle": "Prefer useDerivedValue Over useAnimatedReaction",
+    "type": "good",
+    "code": "import { useSharedValue, useDerivedValue } from 'react-native-reanimated'\n\nfunction MyComponent() {\n  const progress = useSharedValue(0)\n\n  const opacity = useDerivedValue(() => 1 - progress.get())\n\n  // ...\n}",
+    "language": "tsx",
+    "description": "useDerivedValue"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.3",
+    "ruleTitle": "Use GestureDetector for Animated Press States",
+    "type": "bad",
+    "code": "import { Pressable } from 'react-native'\nimport Animated, {\n  useSharedValue,\n  useAnimatedStyle,\n  withTiming,\n} from 'react-native-reanimated'\n\nfunction AnimatedButton({ onPress }: { onPress: () => void }) {\n  const scale = useSharedValue(1)\n\n  const animatedStyle = useAnimatedStyle(() => ({\n    transform: [{ scale: scale.value }],\n  }))\n\n  return (\n    <Pressable\n      onPress={onPress}\n      onPressIn={() => (scale.value = withTiming(0.95))}\n      onPressOut={() => (scale.value = withTiming(1))}\n    >\n      <Animated.View style={animatedStyle}>\n        <Text>Press me</Text>\n      </Animated.View>\n    </Pressable>\n  )\n}",
+    "language": "tsx",
+    "description": "Pressable with JS thread callbacks"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "3.3",
+    "ruleTitle": "Use GestureDetector for Animated Press States",
+    "type": "good",
+    "code": "import { Gesture, GestureDetector } from 'react-native-gesture-handler'\nimport Animated, {\n  useSharedValue,\n  useAnimatedStyle,\n  withTiming,\n  interpolate,\n  runOnJS,\n} from 'react-native-reanimated'\n\nfunction AnimatedButton({ onPress }: { onPress: () => void }) {\n  // Store the press STATE (0 = not pressed, 1 = pressed)\n  const pressed = useSharedValue(0)\n\n  const tap = Gesture.Tap()\n    .onBegin(() => {\n      pressed.set(withTiming(1))\n    })\n    .onFinalize(() => {\n      pressed.set(withTiming(0))\n    })\n    .onEnd(() => {\n      runOnJS(onPress)()\n    })\n\n  // Derive visual values from the state\n  const animatedStyle = useAnimatedStyle(() => ({\n    transform: [\n      { scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) },\n    ],\n  }))\n\n  return (\n    <GestureDetector gesture={tap}>\n      <Animated.View style={animatedStyle}>\n        <Text>Press me</Text>\n      </Animated.View>\n    </GestureDetector>\n  )\n}",
+    "language": "tsx",
+    "description": "GestureDetector with UI thread worklets"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "4.1",
+    "ruleTitle": "Never Track Scroll Position in useState",
+    "type": "bad",
+    "code": "import { useState } from 'react'\nimport {\n  ScrollView,\n  NativeSyntheticEvent,\n  NativeScrollEvent,\n} from 'react-native'\n\nfunction Feed() {\n  const [scrollY, setScrollY] = useState(0)\n\n  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {\n    setScrollY(e.nativeEvent.contentOffset.y) // re-renders on every frame\n  }\n\n  return <ScrollView onScroll={onScroll} scrollEventThrottle={16} />\n}",
+    "language": "tsx",
+    "description": "useState causes jank"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "4.1",
+    "ruleTitle": "Never Track Scroll Position in useState",
+    "type": "good",
+    "code": "import Animated, {\n  useSharedValue,\n  useAnimatedScrollHandler,\n} from 'react-native-reanimated'\n\nfunction Feed() {\n  const scrollY = useSharedValue(0)\n\n  const onScroll = useAnimatedScrollHandler({\n    onScroll: (e) => {\n      scrollY.value = e.contentOffset.y // runs on UI thread, no re-render\n    },\n  })\n\n  return (\n    <Animated.ScrollView\n      onScroll={onScroll}\n      // higher number has better performance, but it fires less often.\n      // unset this if you need higher precision over performance.\n      scrollEventThrottle={16}\n    />\n  )\n}",
+    "language": "tsx",
+    "description": "Reanimated for animations"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "4.1",
+    "ruleTitle": "Never Track Scroll Position in useState",
+    "type": "good",
+    "code": "import { useRef } from 'react'\nimport {\n  ScrollView,\n  NativeSyntheticEvent,\n  NativeScrollEvent,\n} from 'react-native'\n\nfunction Feed() {\n  const scrollY = useRef(0)\n\n  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {\n    scrollY.current = e.nativeEvent.contentOffset.y // no re-render\n  }\n\n  return <ScrollView onScroll={onScroll} scrollEventThrottle={16} />\n}",
+    "language": "tsx",
+    "description": "ref for non-reactive tracking"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "bad",
+    "code": "import { createStackNavigator } from '@react-navigation/stack'\n\nconst Stack = createStackNavigator()\n\nfunction App() {\n  return (\n    <Stack.Navigator>\n      <Stack.Screen name='Home' component={HomeScreen} />\n      <Stack.Screen name='Details' component={DetailsScreen} />\n    </Stack.Navigator>\n  )\n}",
+    "language": "tsx",
+    "description": "JS stack navigator"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "good",
+    "code": "import { createNativeStackNavigator } from '@react-navigation/native-stack'\n\nconst Stack = createNativeStackNavigator()\n\nfunction App() {\n  return (\n    <Stack.Navigator>\n      <Stack.Screen name='Home' component={HomeScreen} />\n      <Stack.Screen name='Details' component={DetailsScreen} />\n    </Stack.Navigator>\n  )\n}",
+    "language": "tsx",
+    "description": "native stack with react-navigation"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "good",
+    "code": "// app/_layout.tsx\nimport { Stack } from 'expo-router'\n\nexport default function Layout() {\n  return <Stack />\n}",
+    "language": "tsx",
+    "description": "expo-router uses native stack by default"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "bad",
+    "code": "import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'\n\nconst Tab = createBottomTabNavigator()\n\nfunction App() {\n  return (\n    <Tab.Navigator>\n      <Tab.Screen name='Home' component={HomeScreen} />\n      <Tab.Screen name='Settings' component={SettingsScreen} />\n    </Tab.Navigator>\n  )\n}",
+    "language": "tsx",
+    "description": "JS bottom tabs"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "good",
+    "code": "import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation'\n\nconst Tab = createNativeBottomTabNavigator()\n\nfunction App() {\n  return (\n    <Tab.Navigator>\n      <Tab.Screen\n        name='Home'\n        component={HomeScreen}\n        options={{\n          tabBarIcon: () => ({ sfSymbol: 'house' }),\n        }}\n      />\n      <Tab.Screen\n        name='Settings'\n        component={SettingsScreen}\n        options={{\n          tabBarIcon: () => ({ sfSymbol: 'gear' }),\n        }}\n      />\n    </Tab.Navigator>\n  )\n}",
+    "language": "tsx",
+    "description": "native bottom tabs with react-navigation"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "good",
+    "code": "// app/(tabs)/_layout.tsx\nimport { NativeTabs } from 'expo-router/unstable-native-tabs'\n\nexport default function TabLayout() {\n  return (\n    <NativeTabs>\n      <NativeTabs.Trigger name='index'>\n        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>\n        <NativeTabs.Trigger.Icon sf='house.fill' md='home' />\n      </NativeTabs.Trigger>\n      <NativeTabs.Trigger name='settings'>\n        <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>\n        <NativeTabs.Trigger.Icon sf='gear' md='settings' />\n      </NativeTabs.Trigger>\n    </NativeTabs>\n  )\n}",
+    "language": "tsx",
+    "description": "expo-router native tabs"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "bad",
+    "code": "<Stack.Screen\n  name='Profile'\n  component={ProfileScreen}\n  options={{\n    header: () => <CustomHeader title='Profile' />,\n  }}\n/>",
+    "language": "tsx",
+    "description": "custom header component"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "5.1",
+    "ruleTitle": "Use Native Navigators for Navigation",
+    "type": "good",
+    "code": "<Stack.Screen\n  name='Profile'\n  component={ProfileScreen}\n  options={{\n    title: 'Profile',\n    headerLargeTitleEnabled: true,\n    headerSearchBarOptions: {\n      placeholder: 'Search',\n    },\n  }}\n/>",
+    "language": "tsx",
+    "description": "native header options"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.1",
+    "ruleTitle": "Minimize State Variables and Derive Values",
+    "type": "bad",
+    "code": "function Cart({ items }: { items: Item[] }) {\n  const [total, setTotal] = useState(0)\n  const [itemCount, setItemCount] = useState(0)\n\n  useEffect(() => {\n    setTotal(items.reduce((sum, item) => sum + item.price, 0))\n    setItemCount(items.length)\n  }, [items])\n\n  return (\n    <View>\n      <Text>{itemCount} items</Text>\n      <Text>Total: ${total}</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "redundant state"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.1",
+    "ruleTitle": "Minimize State Variables and Derive Values",
+    "type": "good",
+    "code": "function Cart({ items }: { items: Item[] }) {\n  const total = items.reduce((sum, item) => sum + item.price, 0)\n  const itemCount = items.length\n\n  return (\n    <View>\n      <Text>{itemCount} items</Text>\n      <Text>Total: ${total}</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "derived values"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.2",
+    "ruleTitle": "Use fallback state instead of initialState",
+    "type": "bad",
+    "code": "type Props = { fallbackEnabled: boolean }\n\nfunction Toggle({ fallbackEnabled }: Props) {\n  const [enabled, setEnabled] = useState(defaultEnabled)\n  // If fallbackEnabled changes, state is stale\n  // State mixes user intent with default value\n\n  return <Switch value={enabled} onValueChange={setEnabled} />\n}",
+    "language": "tsx",
+    "description": "syncs state, loses reactivity"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.2",
+    "ruleTitle": "Use fallback state instead of initialState",
+    "type": "good",
+    "code": "type Props = { fallbackEnabled: boolean }\n\nfunction Toggle({ fallbackEnabled }: Props) {\n  const [_enabled, setEnabled] = useState<boolean | undefined>(undefined)\n  const enabled = _enabled ?? defaultEnabled\n  // undefined = user hasn't touched it, falls back to prop\n  // If defaultEnabled changes, component reflects it\n  // Once user interacts, their choice persists\n\n  return <Switch value={enabled} onValueChange={setEnabled} />\n}",
+    "language": "tsx",
+    "description": "state is user intent, reactive fallback"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.3",
+    "ruleTitle": "useState Dispatch updaters for State That Depends on Current Value",
+    "type": "bad",
+    "code": "const [size, setSize] = useState<Size | undefined>(undefined)\n\nconst onLayout = (e: LayoutChangeEvent) => {\n  const { width, height } = e.nativeEvent.layout\n  // size may be stale in this closure\n  if (size?.width !== width || size?.height !== height) {\n    setSize({ width, height })\n  }\n}",
+    "language": "tsx",
+    "description": "reads state directly"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.3",
+    "ruleTitle": "useState Dispatch updaters for State That Depends on Current Value",
+    "type": "good",
+    "code": "const [size, setSize] = useState<Size | undefined>(undefined)\n\nconst onLayout = (e: LayoutChangeEvent) => {\n  const { width, height } = e.nativeEvent.layout\n  setSize((prev) => {\n    if (prev?.width === width && prev?.height === height) return prev\n    return { width, height }\n  })\n}",
+    "language": "tsx",
+    "description": "dispatch updater"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.3",
+    "ruleTitle": "useState Dispatch updaters for State That Depends on Current Value",
+    "type": "bad",
+    "code": "const [size, setSize] = useState<Size | undefined>(undefined)\n\nconst onLayout = (e: LayoutChangeEvent) => {\n  const { width, height } = e.nativeEvent.layout\n  setSize((prev) => (prev === width ? prev : width))\n}",
+    "language": "tsx",
+    "description": "unnecessary comparison for primitive state"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.3",
+    "ruleTitle": "useState Dispatch updaters for State That Depends on Current Value",
+    "type": "good",
+    "code": "const [size, setSize] = useState<Size | undefined>(undefined)\n\nconst onLayout = (e: LayoutChangeEvent) => {\n  const { width, height } = e.nativeEvent.layout\n  setSize(width)\n}",
+    "language": "tsx",
+    "description": "sets primitive state directly"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.3",
+    "ruleTitle": "useState Dispatch updaters for State That Depends on Current Value",
+    "type": "bad",
+    "code": "const [count, setCount] = useState(0)\n\nconst onTap = () => {\n  setCount(count + 1)\n}",
+    "language": "tsx",
+    "description": "reads state directly from the callback"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "6.3",
+    "ruleTitle": "useState Dispatch updaters for State That Depends on Current Value",
+    "type": "good",
+    "code": "const [count, setCount] = useState(0)\n\nconst onTap = () => {\n  setCount((prev) => prev + 1)\n}",
+    "language": "tsx",
+    "description": "dispatch updater"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "7.1",
+    "ruleTitle": "State Must Represent Ground Truth",
+    "type": "bad",
+    "code": "const scale = useSharedValue(1)\n\nconst tap = Gesture.Tap()\n  .onBegin(() => {\n    scale.set(withTiming(0.95))\n  })\n  .onFinalize(() => {\n    scale.set(withTiming(1))\n  })\n\nconst animatedStyle = useAnimatedStyle(() => ({\n  transform: [{ scale: scale.get() }],\n}))",
+    "language": "tsx",
+    "description": "storing the visual output"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "7.1",
+    "ruleTitle": "State Must Represent Ground Truth",
+    "type": "good",
+    "code": "const pressed = useSharedValue(0) // 0 = not pressed, 1 = pressed\n\nconst tap = Gesture.Tap()\n  .onBegin(() => {\n    pressed.set(withTiming(1))\n  })\n  .onFinalize(() => {\n    pressed.set(withTiming(0))\n  })\n\nconst animatedStyle = useAnimatedStyle(() => ({\n  transform: [{ scale: interpolate(pressed.get(), [0, 1], [1, 0.95]) }],\n}))",
+    "language": "tsx",
+    "description": "storing the state, deriving the visual"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "8.1",
+    "ruleTitle": "Destructure Functions Early in Render (React Compiler)",
+    "type": "bad",
+    "code": "import { useRouter } from 'expo-router'\n\nfunction SaveButton(props) {\n  const router = useRouter()\n\n  // bad: react-compiler will key the cache on \"props\" and \"router\", which are objects that change each render\n  const handlePress = () => {\n    props.onSave()\n    router.push('/success') // unstable reference\n  }\n\n  return <Button onPress={handlePress}>Save</Button>\n}",
+    "language": "tsx",
+    "description": "dotting into object"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "8.1",
+    "ruleTitle": "Destructure Functions Early in Render (React Compiler)",
+    "type": "good",
+    "code": "import { useRouter } from 'expo-router'\n\nfunction SaveButton({ onSave }) {\n  const { push } = useRouter()\n\n  // good: react-compiler will key on push and onSave\n  const handlePress = () => {\n    onSave()\n    push('/success') // stable reference\n  }\n\n  return <Button onPress={handlePress}>Save</Button>\n}",
+    "language": "tsx",
+    "description": "destructure early"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "8.2",
+    "ruleTitle": "Use .get() and .set() for Reanimated Shared Values (not .value)",
+    "type": "bad",
+    "code": "import { useSharedValue } from 'react-native-reanimated'\n\nfunction Counter() {\n  const count = useSharedValue(0)\n\n  const increment = () => {\n    count.value = count.value + 1 // opts out of react compiler\n  }\n\n  return <Button onPress={increment} title={`Count: ${count.value}`} />\n}",
+    "language": "tsx",
+    "description": "breaks with React Compiler"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "8.2",
+    "ruleTitle": "Use .get() and .set() for Reanimated Shared Values (not .value)",
+    "type": "good",
+    "code": "import { useSharedValue } from 'react-native-reanimated'\n\nfunction Counter() {\n  const count = useSharedValue(0)\n\n  const increment = () => {\n    count.set(count.get() + 1)\n  }\n\n  return <Button onPress={increment} title={`Count: ${count.get()}`} />\n}",
+    "language": "tsx",
+    "description": "React Compiler compatible"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.1",
+    "ruleTitle": "Measuring View Dimensions",
+    "type": "good",
+    "code": "import { useLayoutEffect, useRef, useState } from 'react'\nimport { View, LayoutChangeEvent } from 'react-native'\n\nfunction MeasuredBox({ children }: { children: React.ReactNode }) {\n  const ref = useRef<View>(null)\n  const [height, setHeight] = useState<number | undefined>(undefined)\n\n  useLayoutEffect(() => {\n    // Sync measurement on mount (RN 0.82+)\n    const rect = ref.current?.getBoundingClientRect()\n    if (rect) setHeight(rect.height)\n    // Pre-0.82: ref.current?.measure((x, y, w, h) => setHeight(h))\n  }, [])\n\n  const onLayout = (e: LayoutChangeEvent) => {\n    setHeight(e.nativeEvent.layout.height)\n  }\n\n  return (\n    <View ref={ref} onLayout={onLayout}>\n      {children}\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "height only"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.1",
+    "ruleTitle": "Measuring View Dimensions",
+    "type": "good",
+    "code": "import { useLayoutEffect, useRef, useState } from 'react'\nimport { View, LayoutChangeEvent } from 'react-native'\n\ntype Size = { width: number; height: number }\n\nfunction MeasuredBox({ children }: { children: React.ReactNode }) {\n  const ref = useRef<View>(null)\n  const [size, setSize] = useState<Size | undefined>(undefined)\n\n  useLayoutEffect(() => {\n    const rect = ref.current?.getBoundingClientRect()\n    if (rect) setSize({ width: rect.width, height: rect.height })\n  }, [])\n\n  const onLayout = (e: LayoutChangeEvent) => {\n    const { width, height } = e.nativeEvent.layout\n    setSize((prev) => {\n      // for non-primitive states, compare values before firing a re-render\n      if (prev?.width === width && prev?.height === height) return prev\n      return { width, height }\n    })\n  }\n\n  return (\n    <View ref={ref} onLayout={onLayout}>\n      {children}\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "both dimensions"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.2",
+    "ruleTitle": "Modern React Native Styling Patterns",
+    "type": "good",
+    "code": "// Incorrect\n{ borderRadius: 12 }\n\n// Correct – smoother iOS-style corners\n{ borderRadius: 12, borderCurve: 'continuous' }",
+    "language": "tsx",
+    "description": "always pair borderCurve continuous with borderRadius"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.2",
+    "ruleTitle": "Modern React Native Styling Patterns",
+    "type": "good",
+    "code": "// Incorrect – margin on children\n<View>\n  <Text style={{ marginBottom: 8 }}>Title</Text>\n  <Text style={{ marginBottom: 8 }}>Subtitle</Text>\n</View>\n\n// Correct – gap on parent\n<View style={{ gap: 8 }}>\n  <Text>Title</Text>\n  <Text>Subtitle</Text>\n</View>",
+    "language": "tsx",
+    "description": "use `gap` instead of margin for spacing between elements"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.2",
+    "ruleTitle": "Modern React Native Styling Patterns",
+    "type": "good",
+    "code": "<View style={{ padding: 16, gap: 12 }}>\n  <Text>First</Text>\n  <Text>Second</Text>\n</View>",
+    "language": "tsx",
+    "description": "use `padding` for space within, `gap` for space between"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.2",
+    "ruleTitle": "Modern React Native Styling Patterns",
+    "type": "good",
+    "code": "// Incorrect – third-party gradient library\n<LinearGradient colors={['#000', '#fff']} />\n\n// Correct – native CSS gradient syntax\n<View\n  style={{\n    experimental_backgroundImage: 'linear-gradient(to bottom, #000, #fff)',\n  }}\n/>",
+    "language": "tsx",
+    "description": "use `experimental_backgroundImage` for linear gradients"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.2",
+    "ruleTitle": "Modern React Native Styling Patterns",
+    "type": "good",
+    "code": "// Incorrect – legacy shadow objects or elevation\n{ shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1 }\n{ elevation: 4 }\n\n// Correct – CSS box-shadow syntax\n{ boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }",
+    "language": "tsx",
+    "description": "use CSS `boxShadow` string syntax for shadows"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.2",
+    "ruleTitle": "Modern React Native Styling Patterns",
+    "type": "good",
+    "code": "// Incorrect – varying font sizes for hierarchy\n<Text style={{ fontSize: 18 }}>Title</Text>\n<Text style={{ fontSize: 14 }}>Subtitle</Text>\n<Text style={{ fontSize: 12 }}>Caption</Text>\n\n// Correct – consistent size, vary weight and color\n<Text style={{ fontWeight: '600' }}>Title</Text>\n<Text style={{ color: '#666' }}>Subtitle</Text>\n<Text style={{ color: '#999' }}>Caption</Text>",
+    "language": "tsx",
+    "description": "avoid multiple font sizes, use weight and color for emphasis"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.3",
+    "ruleTitle": "Use contentInset for Dynamic ScrollView Spacing",
+    "type": "bad",
+    "code": "function Feed({ bottomOffset }: { bottomOffset: number }) {\n  return (\n    <ScrollView contentContainerStyle={{ paddingBottom: bottomOffset }}>\n      {children}\n    </ScrollView>\n  )\n}\n// Changing bottomOffset triggers full layout recalculation",
+    "language": "tsx",
+    "description": "padding causes layout recalculation"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.3",
+    "ruleTitle": "Use contentInset for Dynamic ScrollView Spacing",
+    "type": "good",
+    "code": "function Feed({ bottomOffset }: { bottomOffset: number }) {\n  return (\n    <ScrollView\n      contentInset={{ bottom: bottomOffset }}\n      scrollIndicatorInsets={{ bottom: bottomOffset }}\n    >\n      {children}\n    </ScrollView>\n  )\n}\n// Changing bottomOffset only adjusts scroll bounds",
+    "language": "tsx",
+    "description": "contentInset for dynamic spacing"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.4",
+    "ruleTitle": "Use contentInsetAdjustmentBehavior for Safe Areas",
+    "type": "bad",
+    "code": "import { SafeAreaView, ScrollView, View, Text } from 'react-native'\n\nfunction MyScreen() {\n  return (\n    <SafeAreaView style={{ flex: 1 }}>\n      <ScrollView>\n        <View>\n          <Text>Content</Text>\n        </View>\n      </ScrollView>\n    </SafeAreaView>\n  )\n}",
+    "language": "tsx",
+    "description": "SafeAreaView wrapper"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.4",
+    "ruleTitle": "Use contentInsetAdjustmentBehavior for Safe Areas",
+    "type": "bad",
+    "code": "import { ScrollView, View, Text } from 'react-native'\nimport { useSafeAreaInsets } from 'react-native-safe-area-context'\n\nfunction MyScreen() {\n  const insets = useSafeAreaInsets()\n\n  return (\n    <ScrollView contentContainerStyle={{ paddingTop: insets.top }}>\n      <View>\n        <Text>Content</Text>\n      </View>\n    </ScrollView>\n  )\n}",
+    "language": "tsx",
+    "description": "manual safe area padding"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.4",
+    "ruleTitle": "Use contentInsetAdjustmentBehavior for Safe Areas",
+    "type": "good",
+    "code": "import { ScrollView, View, Text } from 'react-native'\n\nfunction MyScreen() {\n  return (\n    <ScrollView contentInsetAdjustmentBehavior='automatic'>\n      <View>\n        <Text>Content</Text>\n      </View>\n    </ScrollView>\n  )\n}",
+    "language": "tsx",
+    "description": "native content inset adjustment"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.5",
+    "ruleTitle": "Use expo-image for Optimized Images",
+    "type": "bad",
+    "code": "import { Image } from 'react-native'\n\nfunction Avatar({ url }: { url: string }) {\n  return <Image source={{ uri: url }} style={styles.avatar} />\n}",
+    "language": "tsx",
+    "description": "React Native Image"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.5",
+    "ruleTitle": "Use expo-image for Optimized Images",
+    "type": "good",
+    "code": "import { Image } from 'expo-image'\n\nfunction Avatar({ url }: { url: string }) {\n  return <Image source={{ uri: url }} style={styles.avatar} />\n}",
+    "language": "tsx",
+    "description": "expo-image"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.6",
+    "ruleTitle": "Use Galeria for Image Galleries and Lightbox",
+    "type": "bad",
+    "code": "function ImageGallery({ urls }: { urls: string[] }) {\n  const [selected, setSelected] = useState<string | null>(null)\n\n  return (\n    <>\n      {urls.map((url) => (\n        <Pressable key={url} onPress={() => setSelected(url)}>\n          <Image source={{ uri: url }} style={styles.thumbnail} />\n        </Pressable>\n      ))}\n      <Modal visible={!!selected} onRequestClose={() => setSelected(null)}>\n        <Image source={{ uri: selected! }} style={styles.fullscreen} />\n      </Modal>\n    </>\n  )\n}",
+    "language": "tsx",
+    "description": "custom modal implementation"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.6",
+    "ruleTitle": "Use Galeria for Image Galleries and Lightbox",
+    "type": "good",
+    "code": "import { Galeria } from '@nandorojo/galeria'\nimport { Image } from 'expo-image'\n\nfunction ImageGallery({ urls }: { urls: string[] }) {\n  return (\n    <Galeria urls={urls}>\n      {urls.map((url, index) => (\n        <Galeria.Image index={index} key={url}>\n          <Image source={{ uri: url }} style={styles.thumbnail} />\n        </Galeria.Image>\n      ))}\n    </Galeria>\n  )\n}",
+    "language": "tsx",
+    "description": "Galeria with expo-image"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.7",
+    "ruleTitle": "Use Native Menus for Dropdowns and Context Menus",
+    "type": "bad",
+    "code": "import { useState } from 'react'\nimport { View, Pressable, Text } from 'react-native'\n\nfunction MyMenu() {\n  const [open, setOpen] = useState(false)\n\n  return (\n    <View>\n      <Pressable onPress={() => setOpen(!open)}>\n        <Text>Open Menu</Text>\n      </Pressable>\n      {open && (\n        <View style={{ position: 'absolute', top: 40 }}>\n          <Pressable onPress={() => console.log('edit')}>\n            <Text>Edit</Text>\n          </Pressable>\n          <Pressable onPress={() => console.log('delete')}>\n            <Text>Delete</Text>\n          </Pressable>\n        </View>\n      )}\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "custom JS menu"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.7",
+    "ruleTitle": "Use Native Menus for Dropdowns and Context Menus",
+    "type": "good",
+    "code": "import * as DropdownMenu from 'zeego/dropdown-menu'\n\nfunction MyMenu() {\n  return (\n    <DropdownMenu.Root>\n      <DropdownMenu.Trigger>\n        <Pressable>\n          <Text>Open Menu</Text>\n        </Pressable>\n      </DropdownMenu.Trigger>\n\n      <DropdownMenu.Content>\n        <DropdownMenu.Item key='edit' onSelect={() => console.log('edit')}>\n          <DropdownMenu.ItemTitle>Edit</DropdownMenu.ItemTitle>\n        </DropdownMenu.Item>\n\n        <DropdownMenu.Item\n          key='delete'\n          destructive\n          onSelect={() => console.log('delete')}\n        >\n          <DropdownMenu.ItemTitle>Delete</DropdownMenu.ItemTitle>\n        </DropdownMenu.Item>\n      </DropdownMenu.Content>\n    </DropdownMenu.Root>\n  )\n}",
+    "language": "tsx",
+    "description": "native menu with zeego"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.8",
+    "ruleTitle": "Use Native Modals Over JS-Based Bottom Sheets",
+    "type": "bad",
+    "code": "import BottomSheet from 'custom-js-bottom-sheet'\n\nfunction MyScreen() {\n  const sheetRef = useRef<BottomSheet>(null)\n\n  return (\n    <View style={{ flex: 1 }}>\n      <Button onPress={() => sheetRef.current?.expand()} title='Open' />\n      <BottomSheet ref={sheetRef} snapPoints={['50%', '90%']}>\n        <View>\n          <Text>Sheet content</Text>\n        </View>\n      </BottomSheet>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "JS-based bottom sheet"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.8",
+    "ruleTitle": "Use Native Modals Over JS-Based Bottom Sheets",
+    "type": "good",
+    "code": "import { Modal, View, Text, Button } from 'react-native'\n\nfunction MyScreen() {\n  const [visible, setVisible] = useState(false)\n\n  return (\n    <View style={{ flex: 1 }}>\n      <Button onPress={() => setVisible(true)} title='Open' />\n      <Modal\n        visible={visible}\n        presentationStyle='formSheet'\n        animationType='slide'\n        onRequestClose={() => setVisible(false)}\n      >\n        <View>\n          <Text>Sheet content</Text>\n        </View>\n      </Modal>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "native Modal with formSheet"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.8",
+    "ruleTitle": "Use Native Modals Over JS-Based Bottom Sheets",
+    "type": "good",
+    "code": "// In your navigator\n<Stack.Screen\n  name='Details'\n  component={DetailsScreen}\n  options={{\n    presentation: 'formSheet',\n    sheetAllowedDetents: 'fitToContents',\n  }}\n/>",
+    "language": "tsx",
+    "description": "React Navigation v7 native form sheet"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.9",
+    "ruleTitle": "Use Pressable Instead of Touchable Components",
+    "type": "bad",
+    "code": "import { TouchableOpacity } from 'react-native'\n\nfunction MyButton({ onPress }: { onPress: () => void }) {\n  return (\n    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>\n      <Text>Press me</Text>\n    </TouchableOpacity>\n  )\n}",
+    "language": "tsx",
+    "description": "legacy Touchable components"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.9",
+    "ruleTitle": "Use Pressable Instead of Touchable Components",
+    "type": "good",
+    "code": "import { Pressable } from 'react-native'\n\nfunction MyButton({ onPress }: { onPress: () => void }) {\n  return (\n    <Pressable onPress={onPress}>\n      <Text>Press me</Text>\n    </Pressable>\n  )\n}",
+    "language": "tsx",
+    "description": "Pressable"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "9.9",
+    "ruleTitle": "Use Pressable Instead of Touchable Components",
+    "type": "good",
+    "code": "import { Pressable } from 'react-native-gesture-handler'\n\nfunction ListItem({ onPress }: { onPress: () => void }) {\n  return (\n    <Pressable onPress={onPress}>\n      <Text>Item</Text>\n    </Pressable>\n  )\n}",
+    "language": "tsx",
+    "description": "Pressable from gesture handler for lists"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "10.1",
+    "ruleTitle": "Use Compound Components Over Polymorphic Children",
+    "type": "bad",
+    "code": "import { Pressable, Text } from 'react-native'\n\ntype ButtonProps = {\n  children: string | React.ReactNode\n  icon?: React.ReactNode\n}\n\nfunction Button({ children, icon }: ButtonProps) {\n  return (\n    <Pressable>\n      {icon}\n      {typeof children === 'string' ? <Text>{children}</Text> : children}\n    </Pressable>\n  )\n}\n\n// Usage is ambiguous\n<Button icon={<Icon />}>Save</Button>\n<Button><CustomText>Save</CustomText></Button>",
+    "language": "tsx",
+    "description": "polymorphic children"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "10.1",
+    "ruleTitle": "Use Compound Components Over Polymorphic Children",
+    "type": "good",
+    "code": "import { Pressable, Text } from 'react-native'\n\nfunction Button({ children }: { children: React.ReactNode }) {\n  return <Pressable>{children}</Pressable>\n}\n\nfunction ButtonText({ children }: { children: React.ReactNode }) {\n  return <Text>{children}</Text>\n}\n\nfunction ButtonIcon({ children }: { children: React.ReactNode }) {\n  return <>{children}</>\n}\n\n// Usage is explicit and composable\n<Button>\n  <ButtonIcon><SaveIcon /></ButtonIcon>\n  <ButtonText>Save</ButtonText>\n</Button>\n\n<Button>\n  <ButtonText>Cancel</ButtonText>\n</Button>",
+    "language": "tsx",
+    "description": "compound components"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "11.1",
+    "ruleTitle": "Install Native Dependencies in App Directory",
+    "type": "bad",
+    "code": "packages/\n  ui/\n    package.json  # has react-native-reanimated\n  app/\n    package.json  # missing react-native-reanimated",
+    "language": "typescript",
+    "description": "native dep in shared package only"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "11.1",
+    "ruleTitle": "Install Native Dependencies in App Directory",
+    "type": "good",
+    "code": "packages/\n  ui/\n    package.json  # has react-native-reanimated\n  app/\n    package.json  # also has react-native-reanimated",
+    "language": "typescript",
+    "description": "native dep in app directory"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "11.1",
+    "ruleTitle": "Install Native Dependencies in App Directory",
+    "type": "good",
+    "code": "// packages/app/package.json\n{\n  \"dependencies\": {\n    \"react-native-reanimated\": \"3.16.1\"\n  }\n}",
+    "language": "json",
+    "description": "app package.json also lists the dep"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "11.2",
+    "ruleTitle": "Use Single Dependency Versions Across Monorepo",
+    "type": "bad",
+    "code": "// packages/app/package.json\n{\n  \"dependencies\": {\n    \"react-native-reanimated\": \"^3.0.0\"\n  }\n}\n\n// packages/ui/package.json\n{\n  \"dependencies\": {\n    \"react-native-reanimated\": \"^3.5.0\"\n  }\n}",
+    "language": "json",
+    "description": "version ranges, multiple versions"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "11.2",
+    "ruleTitle": "Use Single Dependency Versions Across Monorepo",
+    "type": "good",
+    "code": "// package.json (root)\n{\n  \"pnpm\": {\n    \"overrides\": {\n      \"react-native-reanimated\": \"3.16.1\"\n    }\n  }\n}\n\n// packages/app/package.json\n{\n  \"dependencies\": {\n    \"react-native-reanimated\": \"3.16.1\"\n  }\n}\n\n// packages/ui/package.json\n{\n  \"dependencies\": {\n    \"react-native-reanimated\": \"3.16.1\"\n  }\n}",
+    "language": "json",
+    "description": "exact versions, single source of truth"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "12.1",
+    "ruleTitle": "Import from Design System Folder",
+    "type": "bad",
+    "code": "import { View, Text } from 'react-native'\nimport { Button } from '@ui/button'\n\nfunction Profile() {\n  return (\n    <View>\n      <Text>Hello</Text>\n      <Button>Save</Button>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "imports directly from package"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "12.1",
+    "ruleTitle": "Import from Design System Folder",
+    "type": "good",
+    "code": "// components/view.tsx\nimport { View as RNView } from 'react-native'\n\n// ideal: pick the props you will actually use to control implementation\nexport function View(\n  props: Pick<React.ComponentProps<typeof RNView>, 'style' | 'children'>\n) {\n  return <RNView {...props} />\n}",
+    "language": "tsx",
+    "description": "imports from design system"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "12.1",
+    "ruleTitle": "Import from Design System Folder",
+    "type": "good",
+    "code": "// components/text.tsx\nexport { Text } from 'react-native'",
+    "language": "tsx",
+    "description": "re-export a React Native component"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "12.1",
+    "ruleTitle": "Import from Design System Folder",
+    "type": "good",
+    "code": "// components/button.tsx\nexport { Button } from '@ui/button'",
+    "language": "tsx",
+    "description": "re-export a design system component"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "12.1",
+    "ruleTitle": "Import from Design System Folder",
+    "type": "good",
+    "code": "import { View } from '@/components/view'\nimport { Text } from '@/components/text'\nimport { Button } from '@/components/button'\n\nfunction Profile() {\n  return (\n    <View>\n      <Text>Hello</Text>\n      <Button>Save</Button>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "app code imports from the design system folder"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "13.1",
+    "ruleTitle": "Hoist Intl Formatter Creation",
+    "type": "bad",
+    "code": "function Price({ amount }: { amount: number }) {\n  const formatter = new Intl.NumberFormat('en-US', {\n    style: 'currency',\n    currency: 'USD',\n  })\n  return <Text>{formatter.format(amount)}</Text>\n}",
+    "language": "tsx",
+    "description": "new formatter every render"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "13.1",
+    "ruleTitle": "Hoist Intl Formatter Creation",
+    "type": "good",
+    "code": "const currencyFormatter = new Intl.NumberFormat('en-US', {\n  style: 'currency',\n  currency: 'USD',\n})\n\nfunction Price({ amount }: { amount: number }) {\n  return <Text>{currencyFormatter.format(amount)}</Text>\n}",
+    "language": "tsx",
+    "description": "hoisted to module scope"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "14.1",
+    "ruleTitle": "Load fonts natively at build time",
+    "type": "bad",
+    "code": "import { useFonts } from 'expo-font'\nimport { Text, View } from 'react-native'\n\nfunction App() {\n  const [fontsLoaded] = useFonts({\n    'Geist-Bold': require('./assets/fonts/Geist-Bold.otf'),\n  })\n\n  if (!fontsLoaded) {\n    return null\n  }\n\n  return (\n    <View>\n      <Text style={{ fontFamily: 'Geist-Bold' }}>Hello</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "async font loading"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "14.1",
+    "ruleTitle": "Load fonts natively at build time",
+    "type": "good",
+    "code": "// app.json\n{\n  \"expo\": {\n    \"plugins\": [\n      [\n        \"expo-font\",\n        {\n          \"fonts\": [\"./assets/fonts/Geist-Bold.otf\"]\n        }\n      ]\n    ]\n  }\n}",
+    "language": "json",
+    "description": "config plugin, fonts embedded at build"
+  },
+  {
+    "skill": "react-native-skills",
+    "ruleId": "14.1",
+    "ruleTitle": "Load fonts natively at build time",
+    "type": "good",
+    "code": "import { Text, View } from 'react-native'\n\nfunction App() {\n  // No loading state needed—font is already available\n  return (\n    <View>\n      <Text style={{ fontFamily: 'Geist-Bold' }}>Hello</Text>\n    </View>\n  )\n}",
+    "language": "tsx",
+    "description": "component needs no loading state"
+  }
+]

@@ -7,14 +7,13 @@ import { readdir, readFile, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { Rule, Section, GuidelinesDocument, ImpactLevel } from './types.js'
 import { parseRuleFile, RuleFile } from './parser.js'
-import { SKILLS, SkillConfig, DEFAULT_SKILL } from './config.js'
+import { SkillConfig } from './config.js'
+import { resolveSkills } from './cli.js'
+import { assignRuleIds } from './ids.js'
 
 // Parse command line arguments
 const args = process.argv.slice(2)
 const upgradeVersion = args.includes('--upgrade-version')
-const skillArg = args.find((arg) => arg.startsWith('--skill='))
-const skillName = skillArg ? skillArg.split('=')[1] : null
-const buildAll = args.includes('--all')
 
 /**
  * Increment a semver-style version string (e.g., "0.1.0" -> "0.1.1", "1.0" -> "1.1")
@@ -151,10 +150,11 @@ async function buildSkill(skillConfig: SkillConfig) {
       ruleData.push(parsed)
     } catch (error) {
       console.error(`  Error parsing ${file}:`, error)
+      process.exitCode = 1
     }
   }
 
-  // Group rules by section
+  // Create sections in file order (the first rule's impact is the default)
   const sectionsMap = new Map<number, Section>()
 
   ruleData.forEach(({ section, rule }) => {
@@ -166,20 +166,11 @@ async function buildSkill(skillConfig: SkillConfig) {
         rules: [],
       })
     }
-    sectionsMap.get(section)!.rules.push(rule)
   })
 
-  // Sort rules within each section by title (using en-US locale for consistency across environments)
-  sectionsMap.forEach((section) => {
-    section.rules.sort((a, b) =>
-      a.title.localeCompare(b.title, 'en-US', { sensitivity: 'base' })
-    )
-
-    // Assign IDs based on sorted order
-    section.rules.forEach((rule, index) => {
-      rule.id = `${section.number}.${index + 1}`
-      rule.subsection = index + 1
-    })
+  // Assign IDs, then add rules to their sections in title order
+  assignRuleIds(ruleData.map(({ rule }) => rule)).forEach((rule) => {
+    sectionsMap.get(rule.section)!.rules.push(rule)
   })
 
   // Convert to array and sort
@@ -263,8 +254,8 @@ async function buildSkill(skillConfig: SkillConfig) {
     try {
       const skillContent = await readFile(skillFile, 'utf-8')
       const updatedSkillContent = skillContent.replace(
-        /^(---[\s\S]*?version:\s*)"[^"]*"([\s\S]*?---)$/m,
-        `$1"${metadata.version}"$2`
+        /^(---[\s\S]*?version:\s*)["'](.+?)["']([\s\S]*?---)$/m,
+        `$1"${metadata.version}"$3`
       )
       await writeFile(skillFile, updatedSkillContent, 'utf-8')
       console.log(`  ✓ Updated SKILL.md`)
@@ -291,26 +282,15 @@ async function build() {
   try {
     console.log('Building AGENTS.md from rules...')
 
-    if (buildAll) {
-      // Build all skills
-      for (const skill of Object.values(SKILLS)) {
-        await buildSkill(skill)
-      }
-    } else if (skillName) {
-      // Build specific skill
-      const skill = SKILLS[skillName]
-      if (!skill) {
-        console.error(`Unknown skill: ${skillName}`)
-        console.error(`Available skills: ${Object.keys(SKILLS).join(', ')}`)
-        process.exit(1)
-      }
+    for (const skill of resolveSkills(args)) {
       await buildSkill(skill)
-    } else {
-      // Build default skill (backwards compatibility)
-      await buildSkill(SKILLS[DEFAULT_SKILL])
     }
 
-    console.log('\n✓ Build complete')
+    if (process.exitCode) {
+      console.error('\n✗ Build finished with parse errors')
+    } else {
+      console.log('\n✓ Build complete')
+    }
   } catch (error) {
     console.error('Build failed:', error)
     process.exit(1)

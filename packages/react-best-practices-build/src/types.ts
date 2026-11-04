@@ -44,6 +44,7 @@ export interface GuidelinesDocument {
 }
 
 export interface TestCase {
+  skill: string // Skill name, e.g. "react-best-practices"
   ruleId: string
   ruleTitle: string
   type: 'bad' | 'good'
