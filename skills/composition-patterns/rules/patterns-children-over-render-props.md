@@ -84,4 +84,8 @@ return (
 ```
 
 Use render props when the parent needs to provide data or state to the child.
-Use children when composing static structure.
+Use children when composing static structure. A render prop that exists only to
+share stateful logic is better replaced by a custom hook: the caller calls the
+hook directly and renders from its return value, with no extra nesting.
+
+Reference: [Passing Props to a Component](https://react.dev/learn/passing-props-to-a-component), [Reusing Logic with Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks)

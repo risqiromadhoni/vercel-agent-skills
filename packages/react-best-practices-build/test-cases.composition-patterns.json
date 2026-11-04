@@ -1,0 +1,191 @@
+[
+  {
+    "skill": "composition-patterns",
+    "ruleId": "1.1",
+    "ruleTitle": "Avoid Boolean Prop Proliferation",
+    "type": "bad",
+    "code": "function Composer({\n  onSubmit,\n  isThread,\n  channelId,\n  isDMThread,\n  dmId,\n  isEditing,\n  isForwarding,\n}: Props) {\n  return (\n    <form>\n      <Header />\n      <Input />\n      {isDMThread ? (\n        <AlsoSendToDMField id={dmId} />\n      ) : isThread ? (\n        <AlsoSendToChannelField id={channelId} />\n      ) : null}\n      {isEditing ? (\n        <EditActions />\n      ) : isForwarding ? (\n        <ForwardActions />\n      ) : (\n        <DefaultActions />\n      )}\n      <Footer onSubmit={onSubmit} />\n    </form>\n  )\n}",
+    "language": "tsx",
+    "description": "boolean props create exponential complexity"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "1.1",
+    "ruleTitle": "Avoid Boolean Prop Proliferation",
+    "type": "good",
+    "code": "// Channel composer\nfunction ChannelComposer() {\n  return (\n    <Composer.Frame>\n      <Composer.Header />\n      <Composer.Input />\n      <Composer.Footer>\n        <Composer.Attachments />\n        <Composer.Formatting />\n        <Composer.Emojis />\n        <Composer.Submit />\n      </Composer.Footer>\n    </Composer.Frame>\n  )\n}\n\n// Thread composer - adds \"also send to channel\" field\nfunction ThreadComposer({ channelId }: { channelId: string }) {\n  return (\n    <Composer.Frame>\n      <Composer.Header />\n      <Composer.Input />\n      <AlsoSendToChannelField id={channelId} />\n      <Composer.Footer>\n        <Composer.Formatting />\n        <Composer.Emojis />\n        <Composer.Submit />\n      </Composer.Footer>\n    </Composer.Frame>\n  )\n}\n\n// Edit composer - different footer actions\nfunction EditMessageComposer() {\n  return (\n    <Composer.Frame>\n      <Composer.Input />\n      <Composer.Footer>\n        <Composer.Formatting />\n        <Composer.Emojis />\n        <Composer.CancelEdit />\n        <Composer.SaveEdit />\n      </Composer.Footer>\n    </Composer.Frame>\n  )\n}",
+    "language": "tsx",
+    "description": "composition eliminates conditionals"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "1.2",
+    "ruleTitle": "Use Compound Components",
+    "type": "bad",
+    "code": "function Composer({\n  renderHeader,\n  renderFooter,\n  renderActions,\n  showAttachments,\n  showFormatting,\n  showEmojis,\n}: Props) {\n  return (\n    <form>\n      {renderHeader?.()}\n      <Input />\n      {showAttachments && <Attachments />}\n      {renderFooter ? (\n        renderFooter()\n      ) : (\n        <Footer>\n          {showFormatting && <Formatting />}\n          {showEmojis && <Emojis />}\n          {renderActions?.()}\n        </Footer>\n      )}\n    </form>\n  )\n}",
+    "language": "tsx",
+    "description": "monolithic component with render props"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "1.2",
+    "ruleTitle": "Use Compound Components",
+    "type": "good",
+    "code": "'use client'\n\nimport { createContext } from 'react'\n\nconst ComposerContext = createContext<ComposerContextValue | null>(null)\n\nfunction ComposerProvider({\n  children,\n  state,\n  actions,\n  meta,\n}: ComposerContextValue & { children: React.ReactNode }) {\n  return (\n    <ComposerContext value={{ state, actions, meta }}>\n      {children}\n    </ComposerContext>\n  )\n}\n\nfunction ComposerFrame({ children }: { children: React.ReactNode }) {\n  return <form>{children}</form>\n}\n\nfunction ComposerHeader() {\n  return <header />\n}\n\nfunction ComposerInput() {\n  const {\n    state,\n    actions: { update },\n    meta: { inputRef },\n  } = useComposer()\n  return (\n    <textarea\n      ref={inputRef}\n      value={state.input}\n      onChange={(e) => update((s) => ({ ...s, input: e.target.value }))}\n    />\n  )\n}\n\nfunction ComposerAttachments() {\n  const { state } = useComposer()\n  return (\n    <ul>\n      {state.attachments.map((a) => (\n        <li key={a.id}>{a.name}</li>\n      ))}\n    </ul>\n  )\n}\n\nfunction ComposerFooter({ children }: { children: React.ReactNode }) {\n  return <footer className=\"flex\">{children}</footer>\n}\n\nfunction ComposerFormatting() {\n  return <div className=\"flex\" />\n}\n\nfunction ComposerEmojis() {\n  return <div className=\"flex\" />\n}\n\nfunction ComposerMentions() {\n  return <div className=\"flex\" />\n}\n\nfunction ComposerCancelEdit() {\n  return <button type=\"button\">Cancel</button>\n}\n\nfunction ComposerSaveEdit() {\n  return <button type=\"submit\">Save</button>\n}\n\nfunction ComposerSubmit() {\n  const {\n    actions: { submit },\n  } = useComposer()\n  return (\n    <button type=\"button\" onClick={submit}>\n      Send\n    </button>\n  )\n}\n\n// Export as compound component\nexport const Composer = {\n  Provider: ComposerProvider,\n  Frame: ComposerFrame,\n  Header: ComposerHeader,\n  Input: ComposerInput,\n  Attachments: ComposerAttachments,\n  Footer: ComposerFooter,\n  Formatting: ComposerFormatting,\n  Emojis: ComposerEmojis,\n  Mentions: ComposerMentions,\n  CancelEdit: ComposerCancelEdit,\n  SaveEdit: ComposerSaveEdit,\n  Submit: ComposerSubmit,\n}",
+    "language": "tsx",
+    "description": "compound components with shared context"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.1",
+    "ruleTitle": "Decouple State Management from UI",
+    "type": "bad",
+    "code": "function ChannelComposer({ channelId }: { channelId: string }) {\n  // UI component knows about global state implementation\n  const state = useGlobalChannelState(channelId)\n  const { submit, updateInput } = useChannelSync(channelId)\n\n  return (\n    <Composer.Frame>\n      <Composer.Input\n        value={state.input}\n        onChange={(e) => updateInput(e.target.value)}\n      />\n      <Composer.Submit onClick={() => submit()} />\n    </Composer.Frame>\n  )\n}",
+    "language": "tsx",
+    "description": "UI coupled to state implementation"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.1",
+    "ruleTitle": "Decouple State Management from UI",
+    "type": "good",
+    "code": "// Provider handles all state management details\nfunction ChannelProvider({\n  channelId,\n  children,\n}: {\n  channelId: string\n  children: React.ReactNode\n}) {\n  const { state, update, submit } = useGlobalChannel(channelId)\n  const inputRef = useRef<HTMLTextAreaElement>(null)\n\n  return (\n    <Composer.Provider\n      state={state}\n      actions={{ update, submit }}\n      meta={{ inputRef }}\n    >\n      {children}\n    </Composer.Provider>\n  )\n}\n\n// UI component only knows about the context interface\nfunction ChannelComposer() {\n  return (\n    <Composer.Frame>\n      <Composer.Header />\n      <Composer.Input />\n      <Composer.Footer>\n        <Composer.Submit />\n      </Composer.Footer>\n    </Composer.Frame>\n  )\n}\n\n// Usage\nfunction Channel({ channelId }: { channelId: string }) {\n  return (\n    <ChannelProvider channelId={channelId}>\n      <ChannelComposer />\n    </ChannelProvider>\n  )\n}",
+    "language": "tsx",
+    "description": "state management isolated in provider"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.2",
+    "ruleTitle": "Define Generic Context Interfaces for Dependency Injection",
+    "type": "bad",
+    "code": "function ComposerInput() {\n  // Tightly coupled to a specific hook\n  const { input, setInput } = useChannelComposerState()\n  return <textarea value={input} onChange={(e) => setInput(e.target.value)} />\n}",
+    "language": "tsx",
+    "description": "UI coupled to specific state implementation"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.2",
+    "ruleTitle": "Define Generic Context Interfaces for Dependency Injection",
+    "type": "good",
+    "code": "// Define a GENERIC interface that any provider can implement\ninterface ComposerState {\n  input: string\n  attachments: Attachment[]\n  isSubmitting: boolean\n}\n\ninterface ComposerActions {\n  update: (updater: (state: ComposerState) => ComposerState) => void\n  submit: () => void\n}\n\ninterface ComposerMeta {\n  inputRef: React.RefObject<HTMLTextAreaElement | null>\n}\n\ninterface ComposerContextValue {\n  state: ComposerState\n  actions: ComposerActions\n  meta: ComposerMeta\n}\n\nconst ComposerContext = createContext<ComposerContextValue | null>(null)\n\n// Read the context through this hook, not use(ComposerContext) directly.\n// It throws outside a provider, so callers always get a non-null value.\nfunction useComposer() {\n  const ctx = use(ComposerContext)\n  if (!ctx) throw new Error('useComposer must be used within a ComposerProvider')\n  return ctx\n}",
+    "language": "tsx",
+    "description": "generic interface enables dependency injection"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.3",
+    "ruleTitle": "Lift State into Provider Components",
+    "type": "bad",
+    "code": "function ForwardMessageComposer() {\n  const [state, setState] = useState(initialState)\n  const forwardMessage = useForwardMessage()\n\n  return (\n    <Composer.Frame>\n      <Composer.Input />\n      <Composer.Footer />\n    </Composer.Frame>\n  )\n}\n\n// Problem: How does this button access composer state?\nfunction ForwardMessageDialog() {\n  return (\n    <Dialog>\n      <ForwardMessageComposer />\n      <MessagePreview /> {/* Needs composer state */}\n      <DialogActions>\n        <CancelButton />\n        <ForwardButton /> {/* Needs to call submit */}\n      </DialogActions>\n    </Dialog>\n  )\n}",
+    "language": "tsx",
+    "description": "state trapped inside component"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.3",
+    "ruleTitle": "Lift State into Provider Components",
+    "type": "bad",
+    "code": "function ForwardMessageDialog() {\n  const [input, setInput] = useState('')\n  return (\n    <Dialog>\n      <ForwardMessageComposer onInputChange={setInput} />\n      <MessagePreview input={input} />\n    </Dialog>\n  )\n}\n\nfunction ForwardMessageComposer({ onInputChange }) {\n  const [state, setState] = useState(initialState)\n  useEffect(() => {\n    onInputChange(state.input) // Sync on every change 😬\n  }, [state.input])\n}",
+    "language": "tsx",
+    "description": "useEffect to sync state up"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.3",
+    "ruleTitle": "Lift State into Provider Components",
+    "type": "bad",
+    "code": "function ForwardMessageDialog() {\n  const stateRef = useRef(null)\n  return (\n    <Dialog>\n      <ForwardMessageComposer stateRef={stateRef} />\n      <ForwardButton onClick={() => submit(stateRef.current)} />\n    </Dialog>\n  )\n}",
+    "language": "tsx",
+    "description": "reading state from ref on submit"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "2.3",
+    "ruleTitle": "Lift State into Provider Components",
+    "type": "good",
+    "code": "function ForwardMessageProvider({ children }: { children: React.ReactNode }) {\n  const [state, setState] = useState(initialState)\n  const forwardMessage = useForwardMessage()\n  const inputRef = useRef<HTMLTextAreaElement>(null)\n\n  return (\n    <Composer.Provider\n      state={state}\n      actions={{ update: setState, submit: forwardMessage }}\n      meta={{ inputRef }}\n    >\n      {children}\n    </Composer.Provider>\n  )\n}\n\nfunction ForwardMessageDialog() {\n  return (\n    <ForwardMessageProvider>\n      <Dialog>\n        <ForwardMessageComposer />\n        <MessagePreview /> {/* Custom components can access state and actions */}\n        <DialogActions>\n          <CancelButton />\n          <ForwardButton /> {/* Custom components can access state and actions */}\n        </DialogActions>\n      </Dialog>\n    </ForwardMessageProvider>\n  )\n}\n\nfunction ForwardButton() {\n  const { actions } = useComposer()\n  return <button onClick={actions.submit}>Forward</button>\n}",
+    "language": "tsx",
+    "description": "state lifted to provider"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "3.1",
+    "ruleTitle": "Create Explicit Component Variants",
+    "type": "bad",
+    "code": "// What does this component actually render?\n<Composer\n  isThread\n  isEditing={false}\n  channelId='abc'\n  showAttachments\n  showFormatting={false}\n/>",
+    "language": "tsx",
+    "description": "one component, many modes"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "3.1",
+    "ruleTitle": "Create Explicit Component Variants",
+    "type": "good",
+    "code": "export function ComposerVariants() {\n  return (\n    <>\n      {/* Immediately clear what this renders */}\n      <ThreadComposer channelId=\"abc\" />\n\n      {/* Or */}\n      <EditMessageComposer messageId=\"xyz\" />\n\n      {/* Or */}\n      <ForwardMessageComposer messageId=\"123\" />\n    </>\n  )\n}",
+    "language": "tsx",
+    "description": "explicit variants"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "3.2",
+    "ruleTitle": "Prefer Composing Children Over Render Props",
+    "type": "bad",
+    "code": "function Composer({\n  renderHeader,\n  renderFooter,\n  renderActions,\n}: {\n  renderHeader?: () => React.ReactNode\n  renderFooter?: () => React.ReactNode\n  renderActions?: () => React.ReactNode\n}) {\n  return (\n    <form>\n      {renderHeader?.()}\n      <Input />\n      {renderFooter ? renderFooter() : <DefaultFooter />}\n      {renderActions?.()}\n    </form>\n  )\n}\n\n// Usage is awkward and inflexible\nreturn (\n  <Composer\n    renderHeader={() => <CustomHeader />}\n    renderFooter={() => (\n      <>\n        <Formatting />\n        <Emojis />\n      </>\n    )}\n    renderActions={() => <SubmitButton />}\n  />\n)",
+    "language": "tsx",
+    "description": "render props"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "3.2",
+    "ruleTitle": "Prefer Composing Children Over Render Props",
+    "type": "good",
+    "code": "function ComposerFrame({ children }: { children: React.ReactNode }) {\n  return <form>{children}</form>\n}\n\nfunction ComposerFooter({ children }: { children: React.ReactNode }) {\n  return <footer className='flex'>{children}</footer>\n}\n\n// Usage is flexible\nreturn (\n  <Composer.Frame>\n    <CustomHeader />\n    <Composer.Input />\n    <Composer.Footer>\n      <Composer.Formatting />\n      <Composer.Emojis />\n      <SubmitButton />\n    </Composer.Footer>\n  </Composer.Frame>\n)",
+    "language": "tsx",
+    "description": "compound components with children"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "4.1",
+    "ruleTitle": "React 19 Refs and Context: ref Prop, Context Provider, use()",
+    "type": "bad",
+    "code": "import { forwardRef } from 'react'\n\nconst ComposerInput = forwardRef<HTMLTextAreaElement, React.ComponentProps<'textarea'>>(\n  (props, ref) => {\n    return <textarea ref={ref} {...props} />\n  }\n)",
+    "language": "tsx",
+    "description": "forwardRef in new React 19-only code"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "4.1",
+    "ruleTitle": "React 19 Refs and Context: ref Prop, Context Provider, use()",
+    "type": "good",
+    "code": "function ComposerInput({\n  ref,\n  ...props\n}: React.ComponentProps<'textarea'> & { ref?: React.Ref<HTMLTextAreaElement> }) {\n  return <textarea ref={ref} {...props} />\n}",
+    "language": "tsx",
+    "description": "ref as a prop"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "4.1",
+    "ruleTitle": "React 19 Refs and Context: ref Prop, Context Provider, use()",
+    "type": "good",
+    "code": "import { createContext, useContext } from 'react'\n\nconst ThemeContext = createContext('light')\n\nfunction Button() {\n  const theme = useContext(ThemeContext)\n  return <button className={theme}>Save</button>\n}",
+    "language": "tsx",
+    "description": "useContext is still fine"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "4.1",
+    "ruleTitle": "React 19 Refs and Context: ref Prop, Context Provider, use()",
+    "type": "good",
+    "code": "import { createContext, use } from 'react'\n\nconst ThemeContext = createContext('light')\n\nfunction Badge({ show }: { show: boolean }) {\n  if (!show) return null\n  const theme = use(ThemeContext)\n  return <span className={theme}>New</span>\n}",
+    "language": "tsx",
+    "description": "Correct (use(Context) for a conditional read) example for React 19 Refs and Context: ref Prop, Context Provider, use()"
+  },
+  {
+    "skill": "composition-patterns",
+    "ruleId": "4.1",
+    "ruleTitle": "React 19 Refs and Context: ref Prop, Context Provider, use()",
+    "type": "good",
+    "code": "import { createContext } from 'react'\n\nconst ThemeContext = createContext('light')\n\nfunction App({ children }: { children: React.ReactNode }) {\n  return <ThemeContext value=\"dark\">{children}</ThemeContext>\n}",
+    "language": "tsx",
+    "description": "Context as provider instead of .Provider"
+  }
+]

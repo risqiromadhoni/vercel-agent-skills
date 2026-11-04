@@ -9,7 +9,7 @@ description:
 license: MIT
 metadata:
   author: vercel
-  version: '1.0.0'
+  version: "1.0.0"
 ---
 
 # React Composition Patterns
@@ -17,7 +17,10 @@ metadata:
 Composition patterns for building flexible, maintainable React components. Avoid
 boolean prop proliferation by using compound components, lifting state, and
 composing internals. These patterns make codebases easier for both humans and AI
-agents to work with as they scale.
+agents to work with as they scale. Prefer props, then children, then compound
+components/context.
+
+Target: React 19.2+, web/DOM examples.
 
 ## When to Apply
 
@@ -60,13 +63,14 @@ Reference these guidelines when:
 - `patterns-explicit-variants` - Create explicit variant components instead of
   boolean modes
 - `patterns-children-over-render-props` - Use children for composition instead
-  of renderX props
+  of renderX props; renderX props are fine when the parent passes data back to
+  the caller, e.g. renderItem
 
 ### 4. React 19 APIs (MEDIUM)
 
 > **⚠️ React 19+ only.** Skip this section if using React 18 or earlier.
 
-- `react19-no-forwardref` - Don't use `forwardRef`; use `use()` instead of `useContext()`
+- `react19-ref-as-prop-and-use` - React 19+ only. `ref` is a regular prop (forwardRef unnecessary), `<Context value>` replaces `.Provider`, `use(Context)` allows conditional reads
 
 ## How to Use
 

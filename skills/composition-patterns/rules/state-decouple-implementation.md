@@ -9,7 +9,7 @@ tags: composition, state, architecture
 
 The provider component should be the only place that knows how state is managed.
 UI components consume the context interface—they don't know if state comes from
-useState, Zustand, or a server sync.
+useState, Zustand, or server-synced data.
 
 **Incorrect (UI coupled to state implementation):**
 
@@ -23,9 +23,9 @@ function ChannelComposer({ channelId }: { channelId: string }) {
     <Composer.Frame>
       <Composer.Input
         value={state.input}
-        onChange={(text) => sync.updateInput(text)}
+        onChange={(e) => updateInput(e.target.value)}
       />
-      <Composer.Submit onPress={() => sync.submit()} />
+      <Composer.Submit onClick={() => submit()} />
     </Composer.Frame>
   )
 }
@@ -43,7 +43,7 @@ function ChannelProvider({
   children: React.ReactNode
 }) {
   const { state, update, submit } = useGlobalChannel(channelId)
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   return (
     <Composer.Provider
@@ -83,7 +83,7 @@ function Channel({ channelId }: { channelId: string }) {
 
 ```tsx
 // Local state for ephemeral forms
-function ForwardMessageProvider({ children }) {
+function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(initialState)
   const forwardMessage = useForwardMessage()
 
@@ -98,7 +98,13 @@ function ForwardMessageProvider({ children }) {
 }
 
 // Global synced state for channels
-function ChannelProvider({ channelId, children }) {
+function ChannelProvider({
+  channelId,
+  children,
+}: {
+  channelId: string
+  children: React.ReactNode
+}) {
   const { state, update, submit } = useGlobalChannel(channelId)
 
   return (
@@ -111,3 +117,5 @@ function ChannelProvider({ channelId, children }) {
 
 The same `Composer.Input` component works with both providers because it only
 depends on the context interface, not the implementation.
+
+Reference: [Sharing State Between Components](https://react.dev/learn/sharing-state-between-components), [Passing Data Deeply with Context](https://react.dev/learn/passing-data-deeply-with-context)
