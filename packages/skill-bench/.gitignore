@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.output/
+dist/
+.nitro/
+.tanstack/
+results/*
+!results/.gitkeep

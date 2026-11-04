@@ -1,0 +1,286 @@
+{
+  "advanced-effect-event-deps": {
+    "status": "adapted",
+    "sourceHash": "73ede7a5444c48ce12079f10674326234359c3a0d70c474957c9f63867408e9f"
+  },
+  "advanced-event-handler-refs": {
+    "status": "adapted",
+    "sourceHash": "5145cc6b8185a60a2f8b6d3935d75614e4a32012025e846f47294363a0bd09d7"
+  },
+  "advanced-init-once": {
+    "status": "adapted",
+    "sourceHash": "712069eb30de75cff0399d33a38dc898fe79f627f6fd5699cd3c84432a5407d0"
+  },
+  "advanced-use-effect-event-latest-values": {
+    "status": "adapted",
+    "sourceHash": "e26f2e26f6be08d52f6654bd79f46f5fdda737709d16966d212ef63771d71c42"
+  },
+  "architecture-avoid-boolean-props": {
+    "status": "adapted",
+    "sourceHash": "90cd02de82a9349518644ec52323afafe2d4cee7c4bc4699c6577442472eea01"
+  },
+  "architecture-compound-components": {
+    "status": "adapted",
+    "sourceHash": "bd42cf2a6b57045f1f52d353c68353c1085918c727c1868c08a999c6208dd999"
+  },
+  "async-api-routes": {
+    "status": "adapted",
+    "sourceHash": "cfe869c0207b01de4fdea09925d5fcc77156bbc183037ada610c6e8207df6136"
+  },
+  "async-cheap-condition-before-await": {
+    "status": "adapted",
+    "sourceHash": "ee3eb45bd29317f7d8533d81cbc5d10cfbbcbce7916a9c8703a170163619d3fd"
+  },
+  "async-defer-await": {
+    "status": "adapted",
+    "sourceHash": "4b048c65059711b8f5b5a40718c529bf39d8aff081b489c0903c4a1556b88b13"
+  },
+  "async-dependencies": {
+    "status": "adapted",
+    "sourceHash": "843bdb92314294003090eb8cf600c1d1762011d1bf703a09b22ec7f15c75bce9"
+  },
+  "async-parallel": {
+    "status": "adapted",
+    "sourceHash": "6a5276e933c0ce0d758ef1288c96997b56b030373302d26a21633f33758c4253"
+  },
+  "async-suspense-boundaries": {
+    "status": "adapted",
+    "sourceHash": "060b98e3d0e15eb8bf5526152740d25a5b86f070c0e756cfa6634e544bdda92f"
+  },
+  "bundle-analyzable-paths": {
+    "status": "adapted",
+    "sourceHash": "a0ecd4f55b039e3108afec544c1566104055b2519e7346258a1b57f333452619"
+  },
+  "bundle-barrel-imports": {
+    "status": "adapted",
+    "sourceHash": "f5d97326f1985ea8981aa0caec71ce36717b107e7d9fb0aa8e7be322c462a2d0"
+  },
+  "bundle-defer-third-party": {
+    "status": "adapted",
+    "sourceHash": "ad58091323c22a24617315125a8791e55cada7ea19f2b51741d1bd0f11fb3cbf"
+  },
+  "bundle-dynamic-imports": {
+    "status": "adapted",
+    "sourceHash": "b3c1944715368184283a50177470dcd177461e80968951ee0242d9aa23c5bbdb"
+  },
+  "client-event-listeners": {
+    "status": "adapted",
+    "sourceHash": "180da912cc6c9d0fcb37cc4073310966bc3405151a7a808f436132d29d96772a"
+  },
+  "client-localstorage-schema": {
+    "status": "adapted",
+    "sourceHash": "5cd00df273fa50a60081be2e239c6eb2f43affde58c25725788d9d857f0fd9f3"
+  },
+  "client-passive-event-listeners": {
+    "status": "adapted",
+    "sourceHash": "5e115ba05cba511e36ecda0585ad593697b9f94ecb2c93923391e60c1459e6bb"
+  },
+  "client-swr-dedup": {
+    "status": "adapted",
+    "sourceHash": "defdf522cbcc21449d308e690dea29643edf9e478b8572746780a174e35359a6"
+  },
+  "js-batch-dom-css": {
+    "status": "adapted",
+    "sourceHash": "8e2b1b494ec35d2bdd8d279c68c8b0cfe7859fe89123f8436ae17ce58f9dec73"
+  },
+  "js-cache-function-results": {
+    "status": "adapted",
+    "sourceHash": "5f3443e9c90788b03c29d6acf6c54b8bc93c0690465a350c84b9b2d333e532d8"
+  },
+  "js-cache-property-access": {
+    "status": "adapted",
+    "sourceHash": "dab6b18a975689f763c5fef226922af490c0eae4d16fbece9213e21305fb7df0"
+  },
+  "js-cache-storage": {
+    "status": "adapted",
+    "sourceHash": "9f1fc4bfd0548747f931532bc5211fc898337bf15dd6801c1195162884f15169"
+  },
+  "js-combine-iterations": {
+    "status": "adapted",
+    "sourceHash": "36bfeb66d1c0f6a95b52b68a29c1e225366de7629c1cc22853f9428c0eb1d60b"
+  },
+  "js-early-exit": {
+    "status": "adapted",
+    "sourceHash": "2d3cf29f1a619786fa38ef5c1a81bed15ccdd61061cbd32c55736f096b8a90ce"
+  },
+  "js-flatmap-filter": {
+    "status": "adapted",
+    "sourceHash": "801e80cf19bba762f5809d4f0f8e7c041fd2df1890f8ef995f4a774fe4b21a4a"
+  },
+  "js-hoist-regexp": {
+    "status": "adapted",
+    "sourceHash": "de9f7603f3c005106417d32ef9c23221c1fe0885260702152b3901fc192c2998"
+  },
+  "js-index-maps": {
+    "status": "adapted",
+    "sourceHash": "7348a8578ad8a5f97b59f8691c6ad3d5fbb8e1d6628b8c4b9f551f8dd8291396"
+  },
+  "js-length-check-first": {
+    "status": "adapted",
+    "sourceHash": "ac7dfc89adf3774854a7f999fc5509f73f28c949c57d5f448c5516ab4f4ca5f5"
+  },
+  "js-min-max-loop": {
+    "status": "adapted",
+    "sourceHash": "10c99bd22150000c686401f18778c9e96e99108490d9398a36ea99e995e396e7"
+  },
+  "js-request-idle-callback": {
+    "status": "adapted",
+    "sourceHash": "581eab836d55bc901f23d69f25f454b7e47c06f31d24392b92f20699c34ff8c2"
+  },
+  "js-set-map-lookups": {
+    "status": "adapted",
+    "sourceHash": "9d231355ca4a668406a80e3e5fc281ababacd570f02dfee8bd8759ed0e9c34c0"
+  },
+  "js-tosorted-immutable": {
+    "status": "adapted",
+    "sourceHash": "c2c3735c61ebc850939c53143b84e2e169287fc6cd4e2cd9b0cfd5ba9b8aac22"
+  },
+  "patterns-children-over-render-props": {
+    "status": "adapted",
+    "sourceHash": "2c83c3671c7a67fa67b752a308e8df36ed4e65370e78df3beec57bc6810c1b15"
+  },
+  "patterns-explicit-variants": {
+    "status": "adapted",
+    "sourceHash": "19686a9353e1c0bc627ddd3f3771e215be8aa44ea954e864fcebd2130f921bd8"
+  },
+  "react19-ref-as-prop-and-use": {
+    "status": "adapted",
+    "sourceHash": "6f82faeaf5e5e48a5948430c0507b637d90b58e30deb4d4d5dcf26a6edea4934"
+  },
+  "rendering-animate-svg-wrapper": {
+    "status": "adapted",
+    "sourceHash": "3f9020339d3e9e2b84533eb5e0ec4815ea1bf57200d36313fa3ba16a6313ecd4"
+  },
+  "rendering-conditional-render": {
+    "status": "adapted",
+    "sourceHash": "77a2ba73953731e6f80b29d4630e8708fb1c0d750df3c3381d7681dd40f85896"
+  },
+  "rendering-hoist-jsx": {
+    "status": "adapted",
+    "sourceHash": "255f834136a32831c328f35cf180c538ce2d6a3456c0a78a0bd74bf487a5ae9f"
+  },
+  "rendering-hydration-no-flicker": {
+    "status": "adapted",
+    "sourceHash": "7fc6c34fd90ba69ca71f33e0f5607d4fe13eb8dce87350719fa2b962fc2c6e5f"
+  },
+  "rendering-hydration-suppress-warning": {
+    "status": "adapted",
+    "sourceHash": "83d119fd246daf63e8270f2244ece630cda6b1b77ae7ac7215f9e44e905a4129"
+  },
+  "rendering-script-defer-async": {
+    "status": "adapted",
+    "sourceHash": "a4b9dd74e626a49ce841db8e65504510280ecfc2b757ec57aa997b81c5d075fa"
+  },
+  "rendering-svg-precision": {
+    "status": "adapted",
+    "sourceHash": "a624a3e3e2bf6ea2d3379105bf2fb2a1ff17a39d56c500031de517288da0342e"
+  },
+  "rendering-usetransition-loading": {
+    "status": "adapted",
+    "sourceHash": "362ed5c207ff61c014498d5ed377be895d721c7f66b062e722c0495fa4e42e36"
+  },
+  "rerender-defer-reads": {
+    "status": "adapted",
+    "sourceHash": "f596745308185385a8776534cb94ceba30de9ca0fa0c03f4f824fc5ab262affc"
+  },
+  "rerender-dependencies": {
+    "status": "adapted",
+    "sourceHash": "71bddc312cad5edc5dfbafe496ae557fb9653f3b6bd2e9be9d5b3760a8fa336a"
+  },
+  "rerender-derived-state": {
+    "status": "adapted",
+    "sourceHash": "f37aa17f64a492a78ca2aa0cd61f99ed5957e2bcbfe793369be973404be75fc0"
+  },
+  "rerender-derived-state-no-effect": {
+    "status": "adapted",
+    "sourceHash": "a9cd01385decbc4aa139514aeab6cc08f3dfbcab0ed03fa3dbb18e0a2a7d391c"
+  },
+  "rerender-functional-setstate": {
+    "status": "adapted",
+    "sourceHash": "595b0f17fa318b932586694c1575b4c16122e86b4c3a8eeaf835f5dbd36a59a5"
+  },
+  "rerender-lazy-state-init": {
+    "status": "adapted",
+    "sourceHash": "fca2eb0bee6ad7ffa3de6628f600ee75ee5aaa1b023012c629df95c8ea27875f"
+  },
+  "rerender-memo": {
+    "status": "adapted",
+    "sourceHash": "90e0cb23382595de1a825248de4553bed923220a564a3382bec8ba909e62f183"
+  },
+  "rerender-memo-with-default-value": {
+    "status": "adapted",
+    "sourceHash": "837eae8a2817db65bb1d786dcb2184464ad8c00e31a40ab0e9d8760dc29cf5ef"
+  },
+  "rerender-move-effect-to-event": {
+    "status": "adapted",
+    "sourceHash": "4b19fc60ab9ea962a73d0f0a50b37d09d7ccb9b6359e1a9dafc37a2f2b296e6d"
+  },
+  "rerender-no-inline-components": {
+    "status": "adapted",
+    "sourceHash": "a3141b9589688a1fe6bfc82aeecadf1fc05f72578d618f5d3dbe0ecc3131ccc9"
+  },
+  "rerender-simple-expression-in-memo": {
+    "status": "adapted",
+    "sourceHash": "788910188d05a1a36a9f4cab47841988a037d3faea8cb799094e24297acbe812"
+  },
+  "rerender-split-combined-hooks": {
+    "status": "adapted",
+    "sourceHash": "9f0645f4ab3eac607fdfdf1b2e7187e8ecdbeecde84ca2deecf90a78bb9f80c3"
+  },
+  "rerender-transitions": {
+    "status": "adapted",
+    "sourceHash": "e92f8d820e6610afe655d7b2ff0b7e21ca7c949185d16fa836fc5bec5b3705db"
+  },
+  "rerender-use-deferred-value": {
+    "status": "adapted",
+    "sourceHash": "669b14c438ad753275d4fafdc8d8b83c8d5991b3d9ad4ddd3867b78923c3d317"
+  },
+  "rerender-use-ref-transient-values": {
+    "status": "adapted",
+    "sourceHash": "3e1e606c0a325464e4796e5fe39b73b9be3444f4a6649d97e0bba0656dc1a04c"
+  },
+  "server-auth-actions": {
+    "status": "adapted",
+    "sourceHash": "35bc8dc78ca5b9a2563707bdfe3fd5973eba36a28b071200b958b3dd76bd80eb"
+  },
+  "server-cache-react": {
+    "status": "adapted",
+    "sourceHash": "ce7f1287c9e35026b328cb169b8defffd79da5c29f39caf90f289dc506cedcca"
+  },
+  "server-dedup-props": {
+    "status": "adapted",
+    "sourceHash": "2b12785f5c86de990d8abbd7b019e5037a533e5fca9642be8ffd3d60c1c54922"
+  },
+  "server-hoist-static-io": {
+    "status": "adapted",
+    "sourceHash": "6ad34c1269b9233f5949d1c89dfb877078aea4e81902c89e5c84a7ed91295671"
+  },
+  "server-no-shared-module-state": {
+    "status": "adapted",
+    "sourceHash": "669f54f18bd3e73296794bcaffedd5e14ff9310b5e6a38d3fdb6976d2724d6bb"
+  },
+  "server-parallel-fetching": {
+    "status": "adapted",
+    "sourceHash": "daddc740e97eebee9744e4454366b7b27187e4525be277e940f63394a4e8835d"
+  },
+  "server-parallel-nested-fetching": {
+    "status": "adapted",
+    "sourceHash": "be8dfefcbea86647447864c8dc5571c623b8232c4f1ed8b25078aaecd3c5fcc0"
+  },
+  "server-serialization": {
+    "status": "adapted",
+    "sourceHash": "349355f37a92066aa85b40a7cbf4eea4c407da9c40413a14bf76330a3c76f76d"
+  },
+  "state-context-interface": {
+    "status": "adapted",
+    "sourceHash": "0b2c02955869e900718ee9c99efe944492c7b7b5ee82547b7195ee28dbfb20fe"
+  },
+  "state-decouple-implementation": {
+    "status": "adapted",
+    "sourceHash": "ccaf7a968dced1afd2f492fd626f99e7605bdc84fa02f889559725db0563d409"
+  },
+  "state-lift-state": {
+    "status": "adapted",
+    "sourceHash": "4b9633e18422f21a8a0bfe9689b95428171fdfdf2e0cd4a595d2eed15ece97cf"
+  }
+}
