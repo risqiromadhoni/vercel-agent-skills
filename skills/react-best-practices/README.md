@@ -8,32 +8,38 @@ A structured repository for creating and maintaining React Best Practices optimi
   - `_sections.md` - Section metadata (titles, impacts, descriptions)
   - `_template.md` - Template for creating new rules
   - `area-description.md` - Individual rule files
-- `src/` - Build scripts and utilities
+- `packages/react-best-practices-build/src/` - Build scripts and utilities (outside this folder)
 - `metadata.json` - Document metadata (version, organization, abstract)
 - __`AGENTS.md`__ - Compiled output (generated)
-- __`test-cases.json`__ - Test cases for LLM evaluation (generated)
+- __`packages/react-best-practices-build/test-cases.json`__ - Test cases for LLM evaluation (generated)
 
 ## Getting Started
 
+The build tooling lives in `packages/react-best-practices-build/`. Run these commands from there:
+
 1. Install dependencies:
    ```bash
-   pnpm install
+   cd packages/react-best-practices-build && pnpm install
    ```
 
-2. Build AGENTS.md from rules:
+2. Validate rule files:
    ```bash
-   pnpm build
+   cd packages/react-best-practices-build && pnpm validate
    ```
 
-3. Validate rule files:
+3. Build AGENTS.md from rules:
    ```bash
-   pnpm validate
+   cd packages/react-best-practices-build && pnpm build
    ```
 
 4. Extract test cases:
    ```bash
-   pnpm extract-tests
+   cd packages/react-best-practices-build && pnpm extract-tests
    ```
+
+## Testing
+
+Rule examples are checked by the cross-framework bench (Next.js 16 and TanStack Start) in `packages/skill-bench/`. See `packages/skill-bench/README.md` for how to run it.
 
 ## Creating a New Rule
 
@@ -49,7 +55,7 @@ A structured repository for creating and maintaining React Best Practices optimi
    - `advanced-` for Advanced Patterns (Section 8)
 3. Fill in the frontmatter and content
 4. Ensure you have clear examples with explanations
-5. Run `pnpm build` to regenerate AGENTS.md and test-cases.json
+5. Run `pnpm validate && pnpm build` from `packages/react-best-practices-build/` to regenerate AGENTS.md and test-cases.json
 
 ## Rule File Structure
 
@@ -102,6 +108,8 @@ Reference: [Link](https://example.com)
 
 ## Scripts
 
+Run from `packages/react-best-practices-build/`:
+
 - `pnpm build` - Compile rules into AGENTS.md
 - `pnpm validate` - Validate all rule files
 - `pnpm extract-tests` - Extract test cases for LLM evaluation
@@ -115,7 +123,7 @@ When adding or modifying rules:
 2. Follow the `_template.md` structure
 3. Include clear bad/good examples with explanations
 4. Add appropriate tags
-5. Run `pnpm build` to regenerate AGENTS.md and test-cases.json
+5. Run `pnpm validate && pnpm build` from `packages/react-best-practices-build/` to regenerate AGENTS.md and test-cases.json
 6. Rules are automatically sorted by title - no need to manage numbers!
 
 ## Acknowledgments

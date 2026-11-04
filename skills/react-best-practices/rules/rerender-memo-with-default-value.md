@@ -1,27 +1,33 @@
 ---
-
 title: Extract Default Non-primitive Parameter Value from Memoized Component to Constant
 impact: MEDIUM
-impactDescription: restores memoization by using a constant for default value
+impactDescription: keeps default function and object identity stable for effect and callback dependencies
 tags: rerender, memo, optimization
-
 ---
 
 ## Extract Default Non-primitive Parameter Value from Memoized Component to Constant
 
-When memoized component has a default value for some non-primitive optional parameter, such as an array, function, or object, calling the component without that parameter results in broken memoization. This is because new value instances are created on every rerender, and they do not pass strict equality comparison in `memo()`.
+When a memoized component has a default value for an optional non-primitive prop, such as an array, function, or object, the default is created fresh inside the component body on every render. Omitting the prop does not break `memo()`: the parent passes `undefined` on every render, so `memo()`'s shallow comparison still finds the props equal and skips the re-render. The problem happens inside the child. The new default identity changes on every render, which breaks anything that depends on identity, such as an effect or `useCallback` dependency array, or a prop passed to a memoized grandchild.
 
-To address this issue, extract the default value into a constant.
+To address this issue, extract the default value into a constant so its identity is stable across renders.
 
-**Incorrect (`onClick` has different values on every rerender):**
+**Incorrect (default `() => {}` is a new function on every render, so the effect re-runs):**
 
 ```tsx
-const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: () => void }) {
-  // ...
-})
+const UserAvatar = memo(function UserAvatar({ userId, label, onClick = () => {} }: { userId: string; label: string; onClick?: () => void }) {
+  useEffect(() => {
+    // Re-runs when `label` changes, even though the subscription only depends on `userId`
+    const unsubscribe = subscribeToPresence(userId, onClick)
+    return unsubscribe
+  }, [userId, onClick])
 
-// Used without optional onClick
-<UserAvatar />
+  return <span>{label}</span>
+});
+
+function Profile({ userId, label }: { userId: string; label: string }) {
+  // Used without optional onClick; a label change re-renders the component
+  return <UserAvatar userId={userId} label={label} />
+}
 ```
 
 **Correct (stable default value):**
@@ -29,10 +35,17 @@ const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: 
 ```tsx
 const NOOP = () => {};
 
-const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () => void }) {
-  // ...
-})
+const UserAvatar = memo(function UserAvatar({ userId, label, onClick = NOOP }: { userId: string; label: string; onClick?: () => void }) {
+  useEffect(() => {
+    const unsubscribe = subscribeToPresence(userId, onClick)
+    return unsubscribe
+  }, [userId, onClick])
 
-// Used without optional onClick
-<UserAvatar />
+  return <span>{label}</span>
+});
+
+function Profile({ userId, label }: { userId: string; label: string }) {
+  // Used without optional onClick; a label change no longer resubscribes
+  return <UserAvatar userId={userId} label={label} />
+}
 ```

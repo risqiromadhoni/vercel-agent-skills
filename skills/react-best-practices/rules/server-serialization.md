@@ -23,14 +23,18 @@ function Profile({ user }: { user: User }) {
 }
 ```
 
-**Correct (serializes only 1 field):**
+**Correct (Server Component passes only what is needed):**
 
 ```tsx
 async function Page() {
   const user = await fetchUser()
   return <Profile name={user.name} />
 }
+```
 
+**Correct (Client Component, separate file):**
+
+```tsx
 'use client'
 function Profile({ name }: { name: string }) {
   return <div>{name}</div>

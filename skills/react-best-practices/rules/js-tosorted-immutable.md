@@ -42,7 +42,7 @@ function UserList({ users }: { users: User[] }) {
 
 **Browser support (fallback for older browsers):**
 
-`.toSorted()` is available in all modern browsers (Chrome 110+, Safari 16+, Firefox 115+, Node.js 20+). For older environments, use spread operator:
+`.toSorted()` is available in all modern browsers (as of 2026: Chrome 110+, Safari 16+, Firefox 115+, Node.js 20+). For older environments, use spread operator:
 
 ```typescript
 // Fallback for older browsers
@@ -55,3 +55,5 @@ const sorted = [...items].sort((a, b) => a.value - b.value)
 - `.toReversed()` - immutable reverse
 - `.toSpliced()` - immutable splice
 - `.with()` - immutable element replacement
+
+If the React Compiler is enabled (`reactCompiler: true` in Next.js 16; off by default), this manual memoization is unnecessary for new code; keep existing memoization in place.

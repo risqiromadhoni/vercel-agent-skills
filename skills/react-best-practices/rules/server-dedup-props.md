@@ -18,15 +18,22 @@ RSC→client serialization deduplicates by object reference, not value. Same ref
 <ClientList usernames={usernames} usernamesOrdered={usernames.toSorted()} />
 ```
 
-**Correct (sends 3 strings):**
+**Correct (Server Component passes only what is needed):**
 
 ```tsx
 // RSC: send once
 <ClientList usernames={usernames} />
+```
 
-// Client: transform there
+**Correct (Client Component, separate file):**
+
+```tsx
 'use client'
-const sorted = useMemo(() => [...usernames].sort(), [usernames])
+function ClientList({ usernames }: { usernames: string[] }) {
+  // Client: transform there
+  const sorted = useMemo(() => [...usernames].sort(), [usernames])
+  return <ul>{sorted.map((name) => <li key={name}>{name}</li>)}</ul>
+}
 ```
 
 **Nested deduplication behavior:**
@@ -63,3 +70,5 @@ users={[{id:1},{id:2}]} sorted={users.toSorted()} // sends 2 arrays + 2 unique o
 ```
 
 **Exception:** Pass derived data when transformation is expensive or client doesn't need original.
+
+If the React Compiler is enabled (`reactCompiler: true` in Next.js 16; off by default), this manual memoization is unnecessary for new code; keep existing memoization in place.

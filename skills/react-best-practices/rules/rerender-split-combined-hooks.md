@@ -61,4 +61,4 @@ useEffect(() => {
 }, [pageTitle])
 ```
 
-**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, it automatically optimizes dependency tracking and may handle some of these cases for you.
+If the React Compiler is enabled (`reactCompiler: true` in Next.js 16; off by default), this manual memoization is unnecessary for new code; keep existing memoization in place.

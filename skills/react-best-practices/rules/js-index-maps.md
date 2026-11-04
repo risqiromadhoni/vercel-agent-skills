@@ -1,7 +1,7 @@
 ---
 title: Build Index Maps for Repeated Lookups
 impact: LOW-MEDIUM
-impactDescription: 1M ops to 2K ops
+impactDescription: O(n*m) to O(n+m) total lookup work
 tags: javascript, map, indexing, optimization, performance
 ---
 

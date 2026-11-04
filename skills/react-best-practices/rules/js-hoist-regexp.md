@@ -15,7 +15,7 @@ Don't create RegExp inside render. Hoist to module scope or memoize with `useMem
 function Highlighter({ text, query }: Props) {
   const regex = new RegExp(`(${query})`, 'gi')
   const parts = text.split(regex)
-  return <>{parts.map((part, i) => ...)}</>
+  return <>{parts.map((part, i) => i % 2 === 1 ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>)}</>
 }
 ```
 
@@ -30,7 +30,7 @@ function Highlighter({ text, query }: Props) {
     [query]
   )
   const parts = text.split(regex)
-  return <>{parts.map((part, i) => ...)}</>
+  return <>{parts.map((part, i) => i % 2 === 1 ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>)}</>
 }
 ```
 
@@ -43,3 +43,5 @@ const regex = /foo/g
 regex.test('foo')  // true, lastIndex = 3
 regex.test('foo')  // false, lastIndex = 0
 ```
+
+If the React Compiler is enabled (`reactCompiler: true` in Next.js 16; off by default), this manual memoization is unnecessary for new code; keep existing memoization in place.

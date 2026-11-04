@@ -9,9 +9,9 @@ tags: server, server-actions, authentication, security, authorization
 
 **Impact: CRITICAL (prevents unauthorized access to server mutations)**
 
-Server Actions (functions with `"use server"`) are exposed as public endpoints, just like API routes. Always verify authentication and authorization **inside** each Server Action—do not rely solely on middleware, layout guards, or page-level checks, as Server Actions can be invoked directly.
+Server Actions (functions with `"use server"`) are exposed as public endpoints, just like API routes. Always verify authentication and authorization **inside** each Server Action—do not rely solely on `proxy.ts`, layout guards, or page-level checks, as Server Actions can be invoked directly. A `proxy.ts` matcher that excludes a path also skips the Server Actions called on that path, so it cannot replace per-action checks. (Next.js 16 renamed `middleware.ts` to `proxy.ts`, which runs on the Node.js runtime; `middleware.ts` is deprecated.)
 
-Next.js documentation explicitly states: "Treat Server Actions with the same security considerations as public-facing API endpoints, and verify if the user is allowed to perform a mutation."
+The Next.js data security guide says to treat Server Actions as reachable via direct POST requests and to verify authentication and authorization inside each one.
 
 **Incorrect (no authentication check):**
 
@@ -60,9 +60,9 @@ import { verifySession } from '@/lib/auth'
 import { z } from 'zod'
 
 const updateProfileSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.uuid(),
   name: z.string().min(1).max(100),
-  email: z.string().email()
+  email: z.email()
 })
 
 export async function updateProfile(data: unknown) {
@@ -93,4 +93,4 @@ export async function updateProfile(data: unknown) {
 }
 ```
 
-Reference: [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication)
+Reference: [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication), [Next.js proxy file convention](https://nextjs.org/docs/app/api-reference/file-conventions/proxy), [Zod 4 changelog](https://zod.dev/v4/changelog)

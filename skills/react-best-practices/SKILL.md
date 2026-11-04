@@ -9,7 +9,7 @@ metadata:
 
 # Vercel React Best Practices
 
-Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Contains 70 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Contains 73 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation. Target: React 19.2+, Next.js 16 (App Router), Zod 4. React Compiler optional (off by default in Next 16).
 
 ## When to Apply
 
@@ -65,6 +65,9 @@ Reference these guidelines when:
 - `server-parallel-fetching` - Restructure components to parallelize fetches
 - `server-parallel-nested-fetching` - Chain nested fetches per item in Promise.all
 - `server-after-nonblocking` - Use after() for non-blocking operations
+- `server-use-cache-directive` - Cache shared data with 'use cache' and tag-based invalidation
+- `server-async-request-apis` - Await params, searchParams, cookies() and headers()
+- `server-connection-over-force-dynamic` - Use connection() instead of force-dynamic for request-time values
 
 ### 4. Client-Side Data Fetching (MEDIUM-HIGH)
 
@@ -107,7 +110,7 @@ Reference these guidelines when:
 
 ### 7. JavaScript Performance (LOW-MEDIUM)
 
-- `js-batch-dom-css` - Group CSS changes via classes or cssText
+- `js-batch-dom-css` - Avoid layout thrashing: batch DOM reads, then writes
 - `js-index-maps` - Build Map for repeated lookups
 - `js-cache-property-access` - Cache object properties in loops
 - `js-cache-function-results` - Cache function results in module-level Map
@@ -127,7 +130,7 @@ Reference these guidelines when:
 - `advanced-effect-event-deps` - Don't put `useEffectEvent` results in effect deps
 - `advanced-event-handler-refs` - Store event handlers in refs
 - `advanced-init-once` - Initialize app once per app load
-- `advanced-use-latest` - useLatest for stable callback refs
+- `advanced-use-effect-event-latest-values` - useEffectEvent to read latest values without re-running effects
 
 ## How to Use
 
