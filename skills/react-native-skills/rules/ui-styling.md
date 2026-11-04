@@ -9,7 +9,7 @@ tags: styling, css, layout, shadows, gradients
 
 Follow these styling patterns for cleaner, more consistent React Native code.
 
-**Always use `borderCurve: 'continuous'` with `borderRadius`:**
+**Correct (always pair borderCurve continuous with borderRadius):**
 
 ```tsx
 // Incorrect
@@ -19,7 +19,7 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 { borderRadius: 12, borderCurve: 'continuous' }
 ```
 
-**Use `gap` instead of margin for spacing between elements:**
+**Correct (use `gap` instead of margin for spacing between elements):**
 
 ```tsx
 // Incorrect – margin on children
@@ -35,7 +35,7 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 </View>
 ```
 
-**Use `padding` for space within, `gap` for space between:**
+**Correct (use `padding` for space within, `gap` for space between):**
 
 ```tsx
 <View style={{ padding: 16, gap: 12 }}>
@@ -44,7 +44,7 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 </View>
 ```
 
-**Use `experimental_backgroundImage` for linear gradients:**
+**Correct (use `experimental_backgroundImage` for linear gradients):**
 
 ```tsx
 // Incorrect – third-party gradient library
@@ -58,7 +58,7 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 />
 ```
 
-**Use CSS `boxShadow` string syntax for shadows:**
+**Correct (use CSS `boxShadow` string syntax for shadows):**
 
 ```tsx
 // Incorrect – legacy shadow objects or elevation
@@ -69,7 +69,7 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 { boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }
 ```
 
-**Avoid multiple font sizes – use weight and color for emphasis:**
+**Correct (avoid multiple font sizes, use weight and color for emphasis):**
 
 ```tsx
 // Incorrect – varying font sizes for hierarchy

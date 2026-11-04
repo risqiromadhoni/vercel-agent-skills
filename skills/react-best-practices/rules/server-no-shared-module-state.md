@@ -41,10 +41,6 @@ function Dashboard({ user }: { user: User | null }) {
 }
 ```
 
-Safe exceptions:
-
-- Immutable static assets or config loaded once at module scope
-- Shared caches intentionally designed for cross-request reuse and keyed correctly
-- Process-wide singletons that do not store request- or user-specific mutable data
+Module scope is memory shared by every request in the process. It is safe for immutable, request-independent values (fonts, config, compiled regexes): read them once at module scope. It is acceptable for bounded caches keyed only on request-independent inputs, with authorization checked outside the cache. It is never safe for request-scoped data such as the current user, session, or headers. On Next.js 16 with Cache Components, prefer `'use cache'` (or `'use cache: remote'` when instances must share entries) over a hand-rolled LRU. An in-process LRU cannot be invalidated across instances. A rejected promise hoisted to module scope stays rejected until the process restarts, so wrap it with a retry.
 
 For static assets and config, see [Hoist Static I/O to Module Level](./server-hoist-static-io.md).

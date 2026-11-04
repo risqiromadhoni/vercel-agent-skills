@@ -1,0 +1,42 @@
+{
+  "architecture-avoid-boolean-props": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  },
+  "architecture-compound-components": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  },
+  "patterns-children-over-render-props": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  },
+  "patterns-explicit-variants": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  },
+  "react19-ref-as-prop-and-use": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "React 19 ref as prop and use(); renamed from react19-no-forwardref."
+  },
+  "state-context-interface": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  },
+  "state-decouple-implementation": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  },
+  "state-lift-state": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React composition; rendered by the fixture rules route (SSR in TanStack Start)."
+  }
+}

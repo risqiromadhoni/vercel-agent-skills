@@ -19,14 +19,15 @@ Use `defer` for scripts that depend on DOM or other scripts. Use `async` for ind
 **Incorrect (blocks rendering):**
 
 ```tsx
-export default function Document() {
+// app/layout.tsx
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
+    <html lang="en">
       <head>
         <script src="https://example.com/analytics.js" />
         <script src="/scripts/utils.js" />
       </head>
-      <body>{/* content */}</body>
+      <body>{children}</body>
     </html>
   )
 }
@@ -35,34 +36,41 @@ export default function Document() {
 **Correct (non-blocking):**
 
 ```tsx
-export default function Document() {
+// app/layout.tsx
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
+    <html lang="en">
       <head>
         {/* Independent script - use async */}
         <script src="https://example.com/analytics.js" async />
         {/* DOM-dependent script - use defer */}
         <script src="/scripts/utils.js" defer />
       </head>
-      <body>{/* content */}</body>
+      <body>{children}</body>
     </html>
   )
 }
 ```
 
-**Note:** In Next.js, prefer the `next/script` component with `strategy` prop instead of raw script tags:
+**Correct (Next.js App Router, next/script):**
 
 ```tsx
+// app/layout.tsx
 import Script from 'next/script'
 
-export default function Page() {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <Script src="https://example.com/analytics.js" strategy="afterInteractive" />
-      <Script src="/scripts/utils.js" strategy="beforeInteractive" />
-    </>
+    <html lang="en">
+      <body>
+        {children}
+        <Script src="https://example.com/analytics.js" strategy="afterInteractive" />
+        <Script src="/scripts/utils.js" strategy="beforeInteractive" />
+      </body>
+    </html>
   )
 }
 ```
 
-Reference: [MDN - Script element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer)
+In Next.js, prefer `next/script` with the `strategy` prop over raw script tags. `strategy="beforeInteractive"` is only valid in the root layout (`app/layout.tsx`), not in a page or nested layout; use `afterInteractive` (the default) or `lazyOnload` elsewhere.
+
+Reference: [MDN - Script element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer), [next/script](https://nextjs.org/docs/app/api-reference/components/script)

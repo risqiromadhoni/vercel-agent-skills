@@ -1,0 +1,88 @@
+name: "Skill bench: Tier 1"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/react-best-practices/**'
+      - 'skills/composition-patterns/**'
+      - 'packages/skill-bench/**'
+      - 'packages/react-best-practices-build/src/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'skills/react-best-practices/**'
+      - 'skills/composition-patterns/**'
+      - 'packages/skill-bench/**'
+      - 'packages/react-best-practices-build/src/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skill-bench-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bench:
+    name: ${{ matrix.fw }} (REACT_COMPILER=${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - fw: nextjs
+            compiler: '0'
+          - fw: nextjs
+            compiler: '1'
+          - fw: tanstack-start
+            compiler: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.24.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+          cache-dependency-path: |
+            packages/skill-bench/pnpm-lock.yaml
+            packages/skill-bench/fixtures/*/pnpm-lock.yaml
+      - name: Install bench dependencies
+        working-directory: packages/skill-bench
+        run: pnpm install --frozen-lockfile
+      - name: Install fixture dependencies
+        working-directory: packages/skill-bench
+        run: pnpm --dir fixtures/${{ matrix.fw }} install --frozen-lockfile
+      - name: Check example hashes
+        working-directory: packages/skill-bench
+        run: pnpm check-hashes --fw=${{ matrix.fw }}
+      - name: Typecheck fixture
+        working-directory: packages/skill-bench
+        run: pnpm --dir fixtures/${{ matrix.fw }} run typecheck
+      - name: Build fixture
+        working-directory: packages/skill-bench
+        run: REACT_COMPILER=${{ matrix.compiler }} pnpm --dir fixtures/${{ matrix.fw }} run build
+
+  selftest:
+    name: Selftest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.24.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+          cache-dependency-path: packages/skill-bench/pnpm-lock.yaml
+      - name: Install bench dependencies
+        working-directory: packages/skill-bench
+        run: pnpm install --frozen-lockfile
+      - name: Selftest
+        working-directory: packages/skill-bench
+        run: pnpm selftest

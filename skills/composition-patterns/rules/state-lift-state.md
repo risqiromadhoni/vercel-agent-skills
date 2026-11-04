@@ -70,7 +70,7 @@ function ForwardMessageDialog() {
   return (
     <Dialog>
       <ForwardMessageComposer stateRef={stateRef} />
-      <ForwardButton onPress={() => submit(stateRef.current)} />
+      <ForwardButton onClick={() => submit(stateRef.current)} />
     </Dialog>
   )
 }
@@ -82,7 +82,7 @@ function ForwardMessageDialog() {
 function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(initialState)
   const forwardMessage = useForwardMessage()
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   return (
     <Composer.Provider
@@ -111,8 +111,8 @@ function ForwardMessageDialog() {
 }
 
 function ForwardButton() {
-  const { actions } = use(Composer.Context)
-  return <Button onPress={actions.submit}>Forward</Button>
+  const { actions } = useComposer()
+  return <button onClick={actions.submit}>Forward</button>
 }
 ```
 
@@ -123,3 +123,5 @@ UI itself.
 
 **Key insight:** Components that need shared state don't have to be visually
 nested inside each other—they just need to be within the same provider.
+
+Reference: [Sharing State Between Components](https://react.dev/learn/sharing-state-between-components), [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)

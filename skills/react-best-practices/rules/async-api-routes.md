@@ -26,13 +26,12 @@ export async function GET(request: Request) {
 export async function GET(request: Request) {
   const sessionPromise = auth()
   const configPromise = fetchConfig()
-  const session = await sessionPromise
-  const [config, data] = await Promise.all([
-    configPromise,
-    fetchData(session.user.id)
-  ])
+  const dataPromise = sessionPromise.then((session) => fetchData(session.user.id))
+  const [config, data] = await Promise.all([configPromise, dataPromise])
   return Response.json({ data, config })
 }
 ```
+
+A promise that rejects before anything has attached a handler to it is reported as an unhandled rejection, which can crash the process, so each started promise must be consumed right away: `Promise.all` takes `configPromise` and `dataPromise`, and the `.then` takes `sessionPromise`.
 
 For operations with more complex dependency chains, use `better-all` to automatically maximize parallelism (see Dependency-Based Parallelization).

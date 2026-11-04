@@ -9,6 +9,8 @@ tags: rerender, searchParams, localStorage, optimization
 
 Don't subscribe to dynamic state (searchParams, localStorage) if you only read it inside callbacks.
 
+On statically prerendered routes, `useSearchParams` must be used below a `<Suspense>` boundary, or `next build` fails with `missing-suspense-with-csr-bailout`.
+
 **Incorrect (subscribes to all searchParams changes):**
 
 ```tsx

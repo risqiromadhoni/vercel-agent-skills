@@ -1,0 +1,26 @@
+{
+  "name": "skill-bench",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic and agent-eval bench for the React skills against Next.js and TanStack Start fixtures",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "fixtures:install": "pnpm --dir fixtures/nextjs install --frozen-lockfile && pnpm --dir fixtures/tanstack-start install --frozen-lockfile",
+    "typecheck": "pnpm --dir fixtures/nextjs run typecheck && pnpm --dir fixtures/tanstack-start run typecheck",
+    "build": "pnpm --dir fixtures/nextjs run build && pnpm --dir fixtures/tanstack-start run build",
+    "sync": "node --import tsx scripts/sync-examples.mjs",
+    "check-hashes": "node --import tsx scripts/check-example-hashes.mjs",
+    "gen-seeds": "node --import tsx scripts/gen-seeds.mjs",
+    "selftest": "node --import tsx scripts/selftest-checks.mjs",
+    "eval": "node --import tsx scripts/run-eval.mjs",
+    "report": "node --import tsx scripts/report.mjs"
+  },
+  "packageManager": "pnpm@10.24.0",
+  "devDependencies": {
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

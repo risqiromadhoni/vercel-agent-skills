@@ -1,0 +1,74 @@
+{
+  "architecture-avoid-boolean-props": {
+    "mustNotMatch": [
+      "\\bis(?:Thread|DMThread|Editing|Forwarding)\\b"
+    ],
+    "notes": "Mode booleans from the Incorrect example (isThread, isDMThread, isEditing, isForwarding) must be gone. Renamed booleans (e.g. `editing: boolean`) are not caught; read eval output for those."
+  },
+  "architecture-compound-components": {
+    "mustNotMatch": [
+      "\\brender(?:Header|Footer|Actions)\\b",
+      "\\bshow(?:Attachments|Formatting|Emojis)\\b"
+    ],
+    "mustMatch": [
+      "export\\s+const\\s+Composer\\s*=\\s*\\{|export\\s+(?:function|const)\\s+Composer(?:Input|Frame|Footer|Header)\\b"
+    ],
+    "notes": "Incorrect uses render-slot props and show-boolean props. Correct exposes the parts on one compound object or as named exports (the Server Components note)."
+  },
+  "patterns-children-over-render-props": {
+    "mustNotMatch": [
+      "\\brender(?:Header|Footer|Actions)\\b",
+      "\\brender[A-Z]\\w*\\??\\.?\\("
+    ],
+    "mustMatch": [
+      "\\bchildren\\b"
+    ],
+    "notes": "Incorrect passes render functions (renderHeader, renderFooter, renderActions) and invokes them. Correct takes children."
+  },
+  "patterns-explicit-variants": {
+    "mustNotMatch": [
+      "\\bis(?:Thread|Editing|Forwarding)\\b",
+      "\\bshow(?:Attachments|Formatting)\\b"
+    ],
+    "mustMatch": [
+      "<[A-Z]\\w+Composer\\b"
+    ],
+    "notes": "Incorrect is one <Composer> with boolean flags. Correct names each variant as its own component (<ThreadComposer>, <EditMessageComposer>). The capital-letter prefix means bare <Composer> does not count."
+  },
+  "react19-ref-as-prop-and-use": {
+    "mustNotMatch": [
+      "\\bforwardRef\\b"
+    ],
+    "mustMatch": [
+      "\\bref\\b"
+    ],
+    "notes": "Incorrect wraps a component in forwardRef. Correct takes ref as a plain prop (React 19). forwardRef is still valid in React 18 code, so the rule is only applied to React 19-only code."
+  },
+  "state-context-interface": {
+    "mustNotMatch": [
+      "\\buseChannelComposerState\\("
+    ],
+    "mustMatch": [
+      "\\buseComposer\\b"
+    ],
+    "notes": "Incorrect couples the UI to one provider-specific hook. Correct reads the generic interface through useComposer()."
+  },
+  "state-decouple-implementation": {
+    "mustNotMatch": [
+      "\\buse(?:GlobalChannelState|ChannelSync)\\("
+    ],
+    "mustMatch": [
+      "<[\\w.]*Provider\\b"
+    ],
+    "notes": "Incorrect UI component calls the implementation hooks directly. Correct moves them into a Provider; the UI only uses Composer parts."
+  },
+  "state-lift-state": {
+    "mustNotMatch": [
+      "function\\s+\\w*Composer\\w*\\s*\\(\\s*\\)\\s*\\{[^}]*\\buseState\\("
+    ],
+    "mustMatch": [
+      "<[\\w.]*Provider\\b"
+    ],
+    "notes": "Incorrect keeps useState inside a *Composer component, so siblings (dialog buttons, preview) cannot reach it. Correct lifts the state into a Provider that wraps the dialog. The regex only looks at a *Composer() with no parameters; a different shape may pass falsely."
+  }
+}

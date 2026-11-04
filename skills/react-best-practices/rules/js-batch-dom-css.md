@@ -58,7 +58,7 @@ function avoidThrashing(element: HTMLElement) {
 }
 ```
 
-**Better: use CSS classes**
+**Correct (define the styles in a CSS class):**
 ```css
 .highlighted-box {
   width: 100px;
@@ -67,6 +67,9 @@ function avoidThrashing(element: HTMLElement) {
   border: 1px solid black;
 }
 ```
+
+**Correct (toggle a class):**
+
 ```typescript
 function updateElementStyles(element: HTMLElement) {
   element.classList.add('highlighted-box')

@@ -55,6 +55,8 @@ getUser(1)  // Cache hit, returns cached result
 
 If you must pass objects, pass the same reference:
 
+**Correct (same reference hits the cache):**
+
 ```typescript
 const params = { uid: 1 }
 getUser(params)  // Query runs
@@ -63,7 +65,7 @@ getUser(params)  // Cache hit (same reference)
 
 **Next.js-Specific Note:**
 
-In Next.js, the `fetch` API is automatically extended with request memoization. Requests with the same URL and options are automatically deduplicated within a single request, so you don't need `React.cache()` for `fetch` calls. However, `React.cache()` is still essential for other async tasks:
+In Next.js, `fetch` GET requests with the same URL and options are memoized within a single render pass, so you don't need `React.cache()` for `fetch` calls. That memoization lasts only for the render pass: since Next.js 15, `fetch` responses are not cached across requests by default (opt in with `cache: 'force-cache'`), and memoization does not apply inside Route Handlers. Inside a `'use cache'` function, `React.cache` runs in an isolated scope, so values stored outside it are not visible inside it. `React.cache()` is still essential for other async tasks:
 
 - Database queries (Prisma, Drizzle, etc.)
 - Heavy computations

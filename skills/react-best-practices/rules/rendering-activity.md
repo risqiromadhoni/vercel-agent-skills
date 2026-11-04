@@ -7,9 +7,9 @@ tags: rendering, activity, visibility, state-preservation
 
 ## Use Activity Component for Show/Hide
 
-Use React's `<Activity>` to preserve state/DOM for expensive components that frequently toggle visibility.
+Requires React 19.2+. Use React's `<Activity>` to preserve state/DOM for expensive components that frequently toggle visibility.
 
-**Usage:**
+**Correct (Activity instead of conditional mounting):**
 
 ```tsx
 import { Activity } from 'react'
@@ -23,4 +23,4 @@ function Dropdown({ isOpen }: Props) {
 }
 ```
 
-Avoids expensive re-renders and state loss.
+Preserves state and DOM across hide/show. It does not make hidden children free: they still render at lower priority when their props change, and their Effects are unmounted while hidden.

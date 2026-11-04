@@ -27,14 +27,20 @@ itself.
 **Correct (explicit variants):**
 
 ```tsx
-// Immediately clear what this renders
-<ThreadComposer channelId="abc" />
+export function ComposerVariants() {
+  return (
+    <>
+      {/* Immediately clear what this renders */}
+      <ThreadComposer channelId="abc" />
 
-// Or
-<EditMessageComposer messageId="xyz" />
+      {/* Or */}
+      <EditMessageComposer messageId="xyz" />
 
-// Or
-<ForwardMessageComposer messageId="123" />
+      {/* Or */}
+      <ForwardMessageComposer messageId="123" />
+    </>
+  )
+}
 ```
 
 Each implementation is unique, explicit and self-contained. Yet they can each
@@ -98,3 +104,5 @@ Each variant is explicit about:
 - What actions are available
 
 No boolean prop combinations to reason about. No impossible states.
+
+Reference: [Passing Props to a Component](https://react.dev/learn/passing-props-to-a-component)

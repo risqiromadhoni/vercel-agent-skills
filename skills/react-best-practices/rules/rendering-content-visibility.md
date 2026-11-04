@@ -18,7 +18,7 @@ Apply `content-visibility: auto` to defer off-screen rendering.
 }
 ```
 
-**Example:**
+**Correct (apply the class to off-screen list items):**
 
 ```tsx
 function MessageList({ messages }: { messages: Message[] }) {
@@ -35,4 +35,4 @@ function MessageList({ messages }: { messages: Message[] }) {
 }
 ```
 
-For 1000 messages, browser skips layout/paint for ~990 off-screen items (10× faster initial render).
+For 1000 messages, the browser skips layout/paint for the ~990 off-screen items, so initial render cost scales with the visible items rather than the full list.

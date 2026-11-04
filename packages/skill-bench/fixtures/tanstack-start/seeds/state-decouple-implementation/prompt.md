@@ -1,0 +1,1 @@
+You are working in a TanStack Start project. Review `src/seed/seed.tsx` for component composition and architecture problems (boolean-prop proliferation, coupling between UI and state, missing compound/provider structure, outdated React 19 APIs) and fix them in place. Keep behaviour identical. Run `pnpm typecheck` and make it pass. Do not touch other files.

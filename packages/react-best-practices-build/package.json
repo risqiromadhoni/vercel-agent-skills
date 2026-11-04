@@ -1,16 +1,17 @@
 {
   "name": "react-best-practices-build",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.24.0",
   "description": "Build tooling for React Best Practices and React Native Guidelines skills",
   "type": "module",
   "scripts": {
-    "build": "pnpm build-agents && pnpm extract-tests",
+    "build": "tsx src/build.ts --all && tsx src/extract-tests.ts --all",
     "build-agents": "tsx src/build.ts",
     "build-all": "tsx src/build.ts --all",
     "build-react": "tsx src/build.ts --skill=react-best-practices",
     "build-rn": "tsx src/build.ts --skill=react-native-skills",
     "build-composition": "tsx src/build.ts --skill=composition-patterns",
-    "validate": "tsx src/validate.ts",
+    "validate": "tsx src/validate.ts --all",
     "extract-tests": "tsx src/extract-tests.ts",
     "migrate": "tsx src/migrate.ts",
     "dev": "pnpm build && pnpm validate"

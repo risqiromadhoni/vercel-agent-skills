@@ -1,0 +1,326 @@
+{
+  "advanced-effect-event-deps": {
+    "status": "adapted",
+    "sourceHash": "20493a416fadb8496327c914f45d6224a19da7977d58947c4e4a5355b330ee32"
+  },
+  "advanced-event-handler-refs": {
+    "status": "adapted",
+    "sourceHash": "58476b77d06eb43e6c09ee33949a10ddcb6c25a788391fd2a1270276314983e5"
+  },
+  "advanced-init-once": {
+    "status": "adapted",
+    "sourceHash": "6a9a97a8def866a810a68669df512872cd7fa5f5d7d07efc6f5aa23914018762"
+  },
+  "advanced-use-effect-event-latest-values": {
+    "status": "adapted",
+    "sourceHash": "9fba22fce3e3949f47d4ecd702e1918804bbf9ef7f3adc7cfd2fb0ef5280ca53"
+  },
+  "architecture-avoid-boolean-props": {
+    "status": "adapted",
+    "sourceHash": "4f4b693372ca7f0e31fcb1e3b948b0c95526a968e5884b55e7927f508f5d6a7b"
+  },
+  "architecture-compound-components": {
+    "status": "adapted",
+    "sourceHash": "d731ec100befa6e9b1af059a4fdccc1fa692ebdaa941c8b1fead2cd94e493791"
+  },
+  "async-api-routes": {
+    "status": "adapted",
+    "sourceHash": "8133e4cd3970174af3bb672836edc3c20956b06bdcab6ac94c25e99c3a521a59"
+  },
+  "async-cheap-condition-before-await": {
+    "status": "adapted",
+    "sourceHash": "b4cfe21bad5da504bcc8a00817862086fbc18bf385ed20fe83e44087cbd37ed8"
+  },
+  "async-defer-await": {
+    "status": "adapted",
+    "sourceHash": "174a12447d44cfd95064bf99ed67c568b9554de12d3ed1e010e8ee3ffe127615"
+  },
+  "async-dependencies": {
+    "status": "adapted",
+    "sourceHash": "4a43603a0968bc1144bcd957b993581bde474e8466a284536bb61801dc3b940e"
+  },
+  "async-parallel": {
+    "status": "adapted",
+    "sourceHash": "878b708f979147366daaab9625a8dc57d04cdda1f86b3e703e9b1e12e042008b"
+  },
+  "async-suspense-boundaries": {
+    "status": "adapted",
+    "sourceHash": "01c822a4d0bdf73b3aa2bb7db3f2d237d2d8d991480b06a321468b845a8ee25c"
+  },
+  "bundle-analyzable-paths": {
+    "status": "adapted",
+    "sourceHash": "11fb505bbb88fbcc8e9106d7224a4c5c2a5f427efb173c027bf3d9e3439672b8"
+  },
+  "bundle-barrel-imports": {
+    "status": "adapted",
+    "sourceHash": "410d67c27bfb714ec56f9f54535c6af441e9105b7500162867d0067f23cc65b2"
+  },
+  "bundle-conditional": {
+    "status": "adapted",
+    "sourceHash": "a3573e250090201758e18bb0cda9a2436a55fc1a29d7be867127d37a2db0a3dd"
+  },
+  "bundle-defer-third-party": {
+    "status": "adapted",
+    "sourceHash": "a3e9626d10f41856bab2872ca8f1ade1d7c4d374ec26985105717ed1559cd62a"
+  },
+  "bundle-dynamic-imports": {
+    "status": "adapted",
+    "sourceHash": "36d2546b0420d15d79630f1dee6a65e9baeab18d2a3d5d3ec373350a75a2418f"
+  },
+  "bundle-preload": {
+    "status": "adapted",
+    "sourceHash": "d99ea7be4f62cf900138fda2436ea55d9f19a5b888200fc5fdaf2ea310c32597"
+  },
+  "client-event-listeners": {
+    "status": "adapted",
+    "sourceHash": "fc3db431c746720983a64ce183eac067a1b5737ffbdc0178c1b58fdcba90bcd5"
+  },
+  "client-localstorage-schema": {
+    "status": "adapted",
+    "sourceHash": "6859b38992067c34329a79dea2d62fc9ca60e9f24d4b81f864e705d9a85d0ae2"
+  },
+  "client-passive-event-listeners": {
+    "status": "adapted",
+    "sourceHash": "d79079d1ddfdc699f315a70488cbe056ae22a5bbf656c7f4d43ee06d22f977c7"
+  },
+  "client-swr-dedup": {
+    "status": "adapted",
+    "sourceHash": "8dc956825a97a84d09aba9dd0875e33b55f58e25aad376bd3276d9b934f8b097"
+  },
+  "js-batch-dom-css": {
+    "status": "adapted",
+    "sourceHash": "c2529ad08407ed47a99d1dea8b224685f2b48ba71502efb9dca5a36e9d811b2c"
+  },
+  "js-cache-function-results": {
+    "status": "adapted",
+    "sourceHash": "0d0cab7ad6b84d2c1edeb30e4ecf9396586068591ff2e2d0d56d79b0725cd1c2"
+  },
+  "js-cache-property-access": {
+    "status": "adapted",
+    "sourceHash": "f8d5cf10965b457f2406d1d15756a5cdd417c4cad00da916d5a3c84fec064c83"
+  },
+  "js-cache-storage": {
+    "status": "adapted",
+    "sourceHash": "03d4071805c49c62aa4938577ff64c978271ac27fcb321bfbbeb067cb301ad0a"
+  },
+  "js-combine-iterations": {
+    "status": "adapted",
+    "sourceHash": "b73c7fdbaf8b59b0a504c376c32d10c7fb6a4d8f53c2fed9a8b64a814608be8d"
+  },
+  "js-early-exit": {
+    "status": "adapted",
+    "sourceHash": "3ee1f3b176a4a72220c4da256b6b13653c712aecf946f79bad986e72f3fe169f"
+  },
+  "js-flatmap-filter": {
+    "status": "adapted",
+    "sourceHash": "56da7580dc94e3b4eb4497812ef9981676b5341f789d1c71bd09a209339d10fd"
+  },
+  "js-hoist-regexp": {
+    "status": "adapted",
+    "sourceHash": "38bfda27e1a588eab9c79c3a4ee66617a850256a6eda2096d3be1a4319d5b68f"
+  },
+  "js-index-maps": {
+    "status": "adapted",
+    "sourceHash": "de928e695d21db81580f6ab510c371bc4c563e98eba9a1a4c71759a32c3a16a2"
+  },
+  "js-length-check-first": {
+    "status": "adapted",
+    "sourceHash": "cb763540f1887b86378eeef4f3e85fdc3db50320d37aa8cc852576c4f30c754d"
+  },
+  "js-min-max-loop": {
+    "status": "adapted",
+    "sourceHash": "43de060302a2aa46499dd2068998b374f5e74b0a311c33318b707b30145d9a09"
+  },
+  "js-request-idle-callback": {
+    "status": "adapted",
+    "sourceHash": "46707c2c8bfcae9138483b51365c5b31c07f5e017970099883b823dcf00e19a3"
+  },
+  "js-set-map-lookups": {
+    "status": "adapted",
+    "sourceHash": "e8dc8842935ec14dcea680188ef504d3da6af34c581c2181922475e7ba3c3df3"
+  },
+  "js-tosorted-immutable": {
+    "status": "adapted",
+    "sourceHash": "199614269da445f336cb388420c2395c06941faa20ec3de377fa3644bd7fd689"
+  },
+  "patterns-children-over-render-props": {
+    "status": "adapted",
+    "sourceHash": "85472f5153cbdd5385523bf0ff1cbb5e8bcbc23b210a875925cd69c1267b2c89"
+  },
+  "patterns-explicit-variants": {
+    "status": "adapted",
+    "sourceHash": "1dda12a186e959d7494d9c9772a0d251ce83f8cf5fdc0d7ba8ae202e40e2f17f"
+  },
+  "react19-ref-as-prop-and-use": {
+    "status": "adapted",
+    "sourceHash": "16a51513cccb6b57302bd43405ed7c9602814d1698b3b84d4fdf1910265aefa2"
+  },
+  "rendering-activity": {
+    "status": "adapted",
+    "sourceHash": "145eaff7fdcf1715b30c90523d818bc1f16b1907c26d808cd391884b63b9797e"
+  },
+  "rendering-animate-svg-wrapper": {
+    "status": "adapted",
+    "sourceHash": "2aaaedea675fcc5bf73f90f0f2b106398b3af1a0ed6f1710646cf992448dd905"
+  },
+  "rendering-conditional-render": {
+    "status": "adapted",
+    "sourceHash": "148fdd772143ac10944a034e27ad956ab290174ca0f1f7d16feee345962cb752"
+  },
+  "rendering-content-visibility": {
+    "status": "adapted",
+    "sourceHash": "ace8f321592aea8d8f4d2b50cb4b5643c252b7b362087de2fc96a5d124d41e5a"
+  },
+  "rendering-hoist-jsx": {
+    "status": "adapted",
+    "sourceHash": "5aad2ad3159837940ff9475e2815c11d928d0bf205e25f4d0b7c83caf81bb6d6"
+  },
+  "rendering-hydration-no-flicker": {
+    "status": "adapted",
+    "sourceHash": "716298e11a25412eb3fa38b87e364c244eee70871971fc6c7f0cdb19e59ffd41"
+  },
+  "rendering-hydration-suppress-warning": {
+    "status": "adapted",
+    "sourceHash": "feb4ed180c1f2885dfcb07236af7ff5c677580b124ded34f9478e1afc3c3701c"
+  },
+  "rendering-resource-hints": {
+    "status": "adapted",
+    "sourceHash": "2a16cbaa6f52b08d08b6bc05dbeb05e67a86052200d7f223290fa1b29309bc54"
+  },
+  "rendering-script-defer-async": {
+    "status": "adapted",
+    "sourceHash": "d6bfdcdbe1f8fcc2a4a9e9bbc97064286b2f0befa65bed9bc950389364d10b1c"
+  },
+  "rendering-svg-precision": {
+    "status": "adapted",
+    "sourceHash": "4a790742b3c78faab79c37a52e590dabc495978dafdd544849dfc10ff602f6d5"
+  },
+  "rendering-usetransition-loading": {
+    "status": "adapted",
+    "sourceHash": "5f6d75dd0a0e05c4ffbf5246cb4bdea9ac4c6fa358bef59025f476177e20b52b"
+  },
+  "rerender-defer-reads": {
+    "status": "adapted",
+    "sourceHash": "f59c3c72d19ad07388fb918f67efa11c4bc3f3fefee982ff6d5a253c8555aef8"
+  },
+  "rerender-dependencies": {
+    "status": "adapted",
+    "sourceHash": "ac6021700a68960b2bd6a9d95ec72b2adedf3204cfcc4d5803eeba1a0ae12579"
+  },
+  "rerender-derived-state": {
+    "status": "adapted",
+    "sourceHash": "bffe74c0fba74d37220a434afc046bec1547d066d4c7cff69418f8dfd21cd221"
+  },
+  "rerender-derived-state-no-effect": {
+    "status": "adapted",
+    "sourceHash": "6f60aee34aef45003d202e9e2873ffd75036a3834be422255f2b718ac8c3e10f"
+  },
+  "rerender-functional-setstate": {
+    "status": "adapted",
+    "sourceHash": "e611eba5f9a96abe86e0e958421a518d3b354619630e0d0175f4beaa5cf2db6a"
+  },
+  "rerender-lazy-state-init": {
+    "status": "adapted",
+    "sourceHash": "152ad70b2deef3341c930fd1957d4e50d0041cea8a9b156312080dbe31bb7e8b"
+  },
+  "rerender-memo": {
+    "status": "adapted",
+    "sourceHash": "3144818442e7c1ea0fc388cdd2bc69f451d0f52385f8b51c876bf6c2fea6626e"
+  },
+  "rerender-memo-with-default-value": {
+    "status": "adapted",
+    "sourceHash": "1b0afa557e643459adf83843fd1fa6a8cd79ef1ee913e09d94073858023015c1"
+  },
+  "rerender-move-effect-to-event": {
+    "status": "adapted",
+    "sourceHash": "9c3aab64fa49c58f7989590c25f3753cfc8233237266183db79be14ec452e2ea"
+  },
+  "rerender-no-inline-components": {
+    "status": "adapted",
+    "sourceHash": "fbaf069835a9c2455b5fc9dfc3c57b49000bf5c51f99205c0d6ca297051b1425"
+  },
+  "rerender-simple-expression-in-memo": {
+    "status": "adapted",
+    "sourceHash": "d997c201129203a13cc4152c6fa722dce812aa8d71b920c27ba98eb7de8920b4"
+  },
+  "rerender-split-combined-hooks": {
+    "status": "adapted",
+    "sourceHash": "432b644739be525c8c412277ce604d729bdde15276c606dccfca43ab218c18f1"
+  },
+  "rerender-transitions": {
+    "status": "adapted",
+    "sourceHash": "9147a181104803c80a37e1703dc2ec96e037798788c9269e69a21f67b7e8069c"
+  },
+  "rerender-use-deferred-value": {
+    "status": "adapted",
+    "sourceHash": "ba963207ddcaf6312a5d10bb67811dd296d5784ddaf641fc663d42fc5743f353"
+  },
+  "rerender-use-ref-transient-values": {
+    "status": "adapted",
+    "sourceHash": "549d1543e64b8b615b767b488422c4bd26942062f9b1347c777aecca2ab4d99d"
+  },
+  "server-after-nonblocking": {
+    "status": "adapted",
+    "sourceHash": "439d8aa18d6fc4efd82647cd2725c9f7792ef8b4366ed32e935b380110c1b7d8"
+  },
+  "server-async-request-apis": {
+    "status": "adapted",
+    "sourceHash": "9739e9a2ccb3e7ef683ec1cb41204ce34539e3b644ba2a6d39ab8f14e5381124"
+  },
+  "server-auth-actions": {
+    "status": "adapted",
+    "sourceHash": "322a01ac01bd5d9f18084b7a1a0d5d9f42452a827d0dcddd23436d2765c556ec"
+  },
+  "server-cache-lru": {
+    "status": "adapted",
+    "sourceHash": "28d27a5932b503211dfa2cbde0c37c1402091b8d26122be9240d01f5cb13597a"
+  },
+  "server-cache-react": {
+    "status": "adapted",
+    "sourceHash": "467d89d9f333ff3a35a4fb4888beab33f74f6cbf68839fab6fbbdb3943246fa5"
+  },
+  "server-connection-over-force-dynamic": {
+    "status": "adapted",
+    "sourceHash": "28ba9c46aa4e6367a08af6eef497b2fc038a8e8e64029c22bc2b2b6eeb8937c3"
+  },
+  "server-dedup-props": {
+    "status": "adapted",
+    "sourceHash": "2da1f17f6f1f5baa4586f39cdf93604b6392f868bb510f24d2dbc9aee8ccb4ba"
+  },
+  "server-hoist-static-io": {
+    "status": "adapted",
+    "sourceHash": "2cadaa7424a7503accd8753a630293057144a4d707b87080ba47ceba3ee8b6cf"
+  },
+  "server-no-shared-module-state": {
+    "status": "adapted",
+    "sourceHash": "6e91297d363244a58554d4541fc8943cb3812951af2be82cf8cf1294e477c36d"
+  },
+  "server-parallel-fetching": {
+    "status": "adapted",
+    "sourceHash": "617e90dcf59794be0834db272cadd3eb6fe7e6ecc485fb519d9908858c45e6bd"
+  },
+  "server-parallel-nested-fetching": {
+    "status": "adapted",
+    "sourceHash": "99e789345fd2a7a443a35bee35b18c153b095080cde693238cb8d8b3ba323ebd"
+  },
+  "server-serialization": {
+    "status": "adapted",
+    "sourceHash": "851e2d0ccb78d5207ae32b14f31cb5a16ebd293475d6432999349418fb58b1b3"
+  },
+  "server-use-cache-directive": {
+    "status": "adapted",
+    "sourceHash": "57a5f02f6fadcec343c162edc0faab00d6f140f00fc47b716e26a8840433532a"
+  },
+  "state-context-interface": {
+    "status": "adapted",
+    "sourceHash": "281b605eefde27a76dd15757dfa889ac7aabfdd8741fef955cd3baf85dd84176"
+  },
+  "state-decouple-implementation": {
+    "status": "adapted",
+    "sourceHash": "641ec27dfdec9f923f601a3e56535fffab767a387e41e06ad8c4ab7ca67d5dcd"
+  },
+  "state-lift-state": {
+    "status": "adapted",
+    "sourceHash": "0b4a35753b9c94536f5a34c9063c66f8c389a3171ccf31caf009d92343fdbac2"
+  }
+}

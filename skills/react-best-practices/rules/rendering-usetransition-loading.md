@@ -51,7 +51,10 @@ function SearchResults() {
     startTransition(async () => {
       // Fetch and update results
       const data = await fetchResults(value)
-      setResults(data)
+      // State updates after an await must be wrapped in another startTransition
+      startTransition(() => {
+        setResults(data)
+      })
     })
   }
 
@@ -65,11 +68,13 @@ function SearchResults() {
 }
 ```
 
+This example has no guard against out-of-order responses, so an older `fetchResults` call that resolves last overwrites newer results; abort or ignore stale requests with `AbortController` if that matters (`useDeferredValue` only defers rendering and does not fix this).
+
 **Benefits:**
 
 - **Automatic pending state**: No need to manually manage `setIsLoading(true/false)`
-- **Error resilience**: Pending state correctly resets even if the transition throws
+- **Error handling**: If a function passed to `startTransition` throws or returns a rejected promise, the error goes to the nearest error boundary
 - **Better responsiveness**: Keeps the UI responsive during updates
-- **Interrupt handling**: New transitions automatically cancel pending ones
+- **Interrupt handling**: A newer update can interrupt a transition's rendering, but it does not cancel an earlier awaited request (see the note above)
 
 Reference: [useTransition](https://react.dev/reference/react/useTransition)

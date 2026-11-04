@@ -51,6 +51,8 @@ function App() {
 }
 ```
 
+**Correct (component needs no loading state):**
+
 ```tsx
 import { Text, View } from 'react-native'
 

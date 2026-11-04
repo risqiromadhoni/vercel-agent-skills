@@ -22,14 +22,17 @@ function CodePanel({ code }: { code: string }) {
 **Correct (Monaco loads on demand):**
 
 ```tsx
+'use client'
+
 import dynamic from 'next/dynamic'
 
-const MonacoEditor = dynamic(
-  () => import('./monaco-editor').then(m => m.MonacoEditor),
+// components/monaco-editor.client.tsx
+export const MonacoEditor = dynamic(
+  () => import('./monaco-editor').then((m) => m.MonacoEditor),
   { ssr: false }
 )
-
-function CodePanel({ code }: { code: string }) {
-  return <MonacoEditor value={code} />
-}
 ```
+
+Import `MonacoEditor` from `components/monaco-editor.client.tsx` in a Server Component (for example `app/page.tsx`) like any other component. `ssr: false` is only allowed in Client Components; Next.js errors if `next/dynamic` is called with it in a Server Component.
+
+Reference: [Lazy loading in Next.js](https://nextjs.org/docs/app/guides/lazy-loading)

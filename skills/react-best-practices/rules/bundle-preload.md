@@ -9,7 +9,7 @@ tags: bundle, preload, user-intent, hover
 
 Preload heavy bundles before they're needed to reduce perceived latency.
 
-**Example (preload on hover/focus):**
+**Correct (preload on hover/focus):**
 
 ```tsx
 function EditorButton({ onClick }: { onClick: () => void }) {
@@ -31,7 +31,7 @@ function EditorButton({ onClick }: { onClick: () => void }) {
 }
 ```
 
-**Example (preload when feature flag is enabled):**
+**Correct (preload when feature flag is enabled):**
 
 ```tsx
 function FlagsProvider({ children, flags }: Props) {

@@ -11,25 +11,25 @@ tags: server, io, performance, next.js, route-handlers, og-image
 
 When loading static assets (fonts, logos, images, config files) in route handlers or server functions, hoist the I/O operation to module level. Module-level code runs once when the module is first imported, not on every request. This eliminates redundant file system reads or network fetches that would otherwise run on every invocation.
 
+Module scope is memory shared by every request in the process. It is safe for immutable, request-independent values (fonts, config, compiled regexes): read them once at module scope. It is acceptable for bounded caches keyed only on request-independent inputs, with authorization checked outside the cache. It is never safe for request-scoped data such as the current user, session, or headers. On Next.js 16 with Cache Components, prefer `'use cache'` (or `'use cache: remote'` when instances must share entries) over a hand-rolled LRU. An in-process LRU cannot be invalidated across instances. A rejected promise hoisted to module scope stays rejected until the process restarts, so wrap it with a retry.
+
 **Incorrect (reads font file on every request):**
 
 ```typescript
 // app/api/og/route.tsx
 import { ImageResponse } from 'next/og'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export async function GET(request: Request) {
   // Runs on EVERY request - expensive!
-  const fontData = await fetch(
-    new URL('./fonts/Inter.ttf', import.meta.url)
-  ).then(res => res.arrayBuffer())
-
-  const logoData = await fetch(
-    new URL('./images/logo.png', import.meta.url)
-  ).then(res => res.arrayBuffer())
+  const fontData = await readFile(join(process.cwd(), 'assets/Inter.ttf'))
+  const logo = await readFile(join(process.cwd(), 'assets/logo.png'))
+  const logoSrc = `data:image/png;base64,${logo.toString('base64')}`
 
   return new ImageResponse(
     <div style={{ fontFamily: 'Inter' }}>
-      <img src={logoData} />
+      <img src={logoSrc} />
       Hello World
     </div>,
     { fonts: [{ name: 'Inter', data: fontData }] }
@@ -42,19 +42,18 @@ export async function GET(request: Request) {
 ```typescript
 // app/api/og/route.tsx
 import { ImageResponse } from 'next/og'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 // Module-level: runs ONCE when module is first imported
-const fontData = fetch(
-  new URL('./fonts/Inter.ttf', import.meta.url)
-).then(res => res.arrayBuffer())
-
-const logoData = fetch(
-  new URL('./images/logo.png', import.meta.url)
-).then(res => res.arrayBuffer())
+const fontData = readFile(join(process.cwd(), 'assets/Inter.ttf'))
+const logoSrc = readFile(join(process.cwd(), 'assets/logo.png')).then(
+  (logo) => `data:image/png;base64,${logo.toString('base64')}`
+)
 
 export async function GET(request: Request) {
   // Await the already-started promises
-  const [font, logo] = await Promise.all([fontData, logoData])
+  const [font, logo] = await Promise.all([fontData, logoSrc])
 
   return new ImageResponse(
     <div style={{ fontFamily: 'Inter' }}>
@@ -82,11 +81,12 @@ const fontData = readFileSync(
 const logoData = readFileSync(
   join(process.cwd(), 'public/images/logo.png')
 )
+const logoSrc = `data:image/png;base64,${logoData.toString('base64')}`
 
 export async function GET(request: Request) {
   return new ImageResponse(
     <div style={{ fontFamily: 'Inter' }}>
-      <img src={logoData} />
+      <img src={logoSrc} />
       Hello World
     </div>,
     { fonts: [{ name: 'Inter', data: fontData }] }

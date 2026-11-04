@@ -1,0 +1,367 @@
+{
+  "advanced-effect-event-deps": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "advanced-event-handler-refs": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "advanced-init-once": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "advanced-use-effect-event-latest-values": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React (useEffectEvent); renamed from advanced-use-latest."
+  },
+  "async-api-routes": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: Route Handler (app/.../route.ts). TanStack: createFileRoute(\"/api/x\")({ server: { handlers } })."
+  },
+  "async-cheap-condition-before-await": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "async-defer-await": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "async-dependencies": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "async-parallel": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "async-suspense-boundaries": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "bundle-analyzable-paths": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Static import specifiers in both frameworks; Vite (TanStack) does not use Turbopack."
+  },
+  "bundle-barrel-imports": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: direct imports; the package must be absent from the optimizePackageImports default list. TanStack: Vite has no optimizePackageImports, so direct imports only."
+  },
+  "bundle-conditional": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: 'use client' module loaded with next/dynamic. TanStack: React.lazy / lazyRouteComponent."
+  },
+  "bundle-defer-third-party": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: 'use client' module loaded with next/dynamic. TanStack: React.lazy / lazyRouteComponent."
+  },
+  "bundle-dynamic-imports": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: 'use client' module loaded with next/dynamic (ssr:false only inside Client Components). TanStack: React.lazy / lazyRouteComponent."
+  },
+  "bundle-preload": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: preload via import() in a 'use client' module. TanStack: router preload plus React.lazy; no next/dynamic."
+  },
+  "client-event-listeners": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "client-localstorage-schema": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "client-passive-event-listeners": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "client-swr-dedup": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-batch-dom-css": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-cache-function-results": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-cache-property-access": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-cache-storage": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-combine-iterations": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-early-exit": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-flatmap-filter": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-hoist-regexp": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-index-maps": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-length-check-first": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-min-max-loop": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-request-idle-callback": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-set-map-lookups": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "js-tosorted-immutable": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-activity": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-animate-svg-wrapper": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-conditional-render": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-content-visibility": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-hoist-jsx": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-hydration-no-flicker": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-hydration-suppress-warning": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-resource-hints": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-script-defer-async": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: next/script in the root layout. TanStack: <script async/defer> in the __root.tsx head."
+  },
+  "rendering-svg-precision": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rendering-usetransition-loading": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-defer-reads": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-dependencies": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-derived-state": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-derived-state-no-effect": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-functional-setstate": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-lazy-state-init": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-memo": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-memo-with-default-value": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-move-effect-to-event": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-no-inline-components": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-simple-expression-in-memo": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-split-combined-hooks": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-transitions": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-use-deferred-value": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "rerender-use-ref-transient-values": {
+    "nextjs": "port",
+    "tanstack-start": "port",
+    "note": "Plain React hooks/components; rendered by the fixture rules route (app/rules or src/routes/rules)."
+  },
+  "server-after-nonblocking": {
+    "nextjs": "port",
+    "tanstack-start": "na",
+    "note": "Next: after() for non-blocking work. No TanStack Start equivalent; scored N/A."
+  },
+  "server-async-request-apis": {
+    "nextjs": "port",
+    "tanstack-start": "na",
+    "note": "Next: await cookies()/headers()/params/searchParams. No Next request-API equivalent in TanStack Start; scored N/A."
+  },
+  "server-auth-actions": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: Server Action plus proxy.ts. TanStack: createServerFn().middleware([createMiddleware({ type: \"function\" })])."
+  },
+  "server-cache-lru": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: Route Handler with a module-level LRU. TanStack: server route handlers; the LRU is per server process."
+  },
+  "server-cache-react": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: React.cache in Server Components. TanStack: loader plus createServerFn; dedupe with a per-request helper."
+  },
+  "server-connection-over-force-dynamic": {
+    "nextjs": "port",
+    "tanstack-start": "na",
+    "note": "Next: connection() instead of force-dynamic. No TanStack Start equivalent; scored N/A."
+  },
+  "server-dedup-props": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: trim props crossing the Server to Client boundary. TanStack: loader plus createServerFn returns only the fields the route renders."
+  },
+  "server-hoist-static-io": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: Route Handler. TanStack: createFileRoute(\"/api/x\")({ server: { handlers } })."
+  },
+  "server-no-shared-module-state": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: Route Handler. TanStack: server route handlers; same rule, no shared mutable module state across requests."
+  },
+  "server-parallel-fetching": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: independent fetches started together. TanStack: Promise.all in the route loader or in createServerFn handlers."
+  },
+  "server-parallel-nested-fetching": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: nested fetches started in parallel. TanStack: Promise.all in the route loader or in createServerFn handlers."
+  },
+  "server-serialization": {
+    "nextjs": "port",
+    "tanstack-start": "equivalent",
+    "note": "Next: pass only serializable fields across the RSC boundary. TanStack: createServerFn return values are serialized; return only what the route needs."
+  },
+  "server-use-cache-directive": {
+    "nextjs": "port",
+    "tanstack-start": "na",
+    "note": "Next: 'use cache' with cacheComponents: true. TanStack Start has no 'use cache' directive; scored N/A."
+  }
+}

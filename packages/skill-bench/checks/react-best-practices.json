@@ -1,0 +1,548 @@
+{
+  "advanced-effect-event-deps": {
+    "mustNotMatch": [
+      "\\}\\s*,\\s*\\[[^\\]]*\\b(?:handle|on)[A-Z]\\w*"
+    ],
+    "mustMatch": [
+      "\\buseEffectEvent\\("
+    ],
+    "notes": "Incorrect puts the useEffectEvent result (handleConnected) in the effect deps. Correct keeps only reactive values in deps. The deps check is a name heuristic (handleX / onX)."
+  },
+  "advanced-event-handler-refs": {
+    "mustNotMatch": [
+      "addEventListener\\([^)]*,\\s*handler\\s*[,)]"
+    ],
+    "mustMatch": [
+      "\\buseRef\\(",
+      "\\.current\\s*="
+    ],
+    "notes": "Incorrect passes the raw handler to addEventListener and lists it in deps, so the listener is re-attached on every render. Correct keeps the latest handler in a ref."
+  },
+  "advanced-init-once": {
+    "mustMatch": [
+      "\\bif\\s*\\(\\s*!?\\s*\\w+\\s*\\)\\s*return\\b"
+    ],
+    "notes": "Incorrect runs one-time setup in an effect with [] deps, which StrictMode runs twice. Correct guards with a module-level flag. Any single-identifier guard counts."
+  },
+  "advanced-use-effect-event-latest-values": {
+    "mustNotMatch": [
+      "\\}\\s*,\\s*\\[[^\\]]*\\bon[A-Z]\\w*"
+    ],
+    "mustMatch": [
+      "\\buseEffectEvent\\("
+    ],
+    "notes": "Incorrect lists the callback prop (onSearch) in the effect deps, so the timer restarts when the callback identity changes. Correct wraps it in useEffectEvent and keeps deps to [query]."
+  },
+  "async-api-routes": {
+    "mustNotMatch": [
+      "=\\s*await\\s+[\\w.]+\\([^)]*\\)\\s*\\n\\s*(?:const|let)\\s+[^=\\n]+=\\s*await\\s"
+    ],
+    "notes": "Incorrect awaits independent calls one after another (auth, fetchConfig, fetchData). Correct starts them as promises and awaits them together. Only the sequential shape is checked."
+  },
+  "async-cheap-condition-before-await": {
+    "mustNotMatch": [
+      "=\\s*await\\s+[\\w.]+\\([^)]*\\)\\s*;?\\s*\\n\\s*if\\s*\\(\\s*\\w+\\s*&&"
+    ],
+    "mustMatch": [
+      "\\bif\\s*\\(\\s*\\w+\\s*\\)\\s*\\{\\s*(?:const|let)\\s+\\w+\\s*=\\s*await\\b"
+    ],
+    "notes": "Incorrect awaits a value and then tests a cheap condition with &&. Correct checks the cheap condition first and awaits inside the branch."
+  },
+  "async-defer-await": {
+    "mustNotMatch": [
+      "=\\s*await\\s+[\\w.]+\\([^)]*\\)\\s*\\n(?:\\s*\\n)*\\s*if\\s*\\("
+    ],
+    "notes": "Incorrect awaits data directly before an early-return guard that does not need it. Correct tests the guard first and awaits after it."
+  },
+  "async-dependencies": {
+    "mustNotMatch": [
+      "\\bPromise\\.all\\([\\s\\S]*?\\)\\s*\\n\\s*const\\s+\\w+\\s*=\\s*await\\s+\\w+\\([^)]*\\b\\w+\\.\\w+"
+    ],
+    "notes": "Incorrect awaits a Promise.all, then a call that uses one of its results, so the dependent call waits for the slowest sibling. Correct chains the dependency (better-all in the example). Only the shape is checked; a hand-rolled chain is not verified."
+  },
+  "async-parallel": {
+    "mustNotMatch": [
+      "=\\s*await\\s+[\\w.]+\\([^)]*\\)\\s*\\n\\s*(?:const|let)\\s+[^=\\n]+=\\s*await\\s"
+    ],
+    "mustMatch": [
+      "\\bPromise\\.all\\("
+    ],
+    "notes": "Incorrect awaits independent calls one after another. Correct runs them together with Promise.all."
+  },
+  "async-suspense-boundaries": {
+    "mustMatch": [
+      "<Suspense\\b"
+    ],
+    "notes": "Incorrect awaits data in the page itself, so the whole page waits. Correct wraps the slow part in <Suspense> with its own async child."
+  },
+  "bundle-analyzable-paths": {
+    "mustNotMatch": [
+      "\\bimport\\(\\s*(?!['\"])"
+    ],
+    "mustMatch": [
+      "\\bimport\\(\\s*['\"]"
+    ],
+    "notes": "Incorrect passes a computed specifier to import(), which bundlers cannot resolve statically. Correct keeps a literal specifier inside each loader."
+  },
+  "bundle-barrel-imports": {
+    "manual": true,
+    "notes": "The Correct fix is config (next.config experimental.optimizePackageImports), which is outside the seed file, so a seed-level regex cannot score it. Manual until the eval may edit next.config.ts."
+  },
+  "bundle-defer-third-party": {
+    "mustNotMatch": [
+      "^\\s*import\\s+[^;\\n]*\\bfrom\\s+['\"]@vercel/analytics/react['\"]"
+    ],
+    "mustMatch": [
+      "\\bimport\\(\\s*['\"]@vercel/analytics/react['\"]"
+    ],
+    "notes": "Incorrect statically imports Analytics into the root layout. Correct loads it through a dynamic import in a 'use client' module."
+  },
+  "bundle-dynamic-imports": {
+    "mustNotMatch": [
+      "^\\s*import\\s+[^;\\n]*\\bfrom\\s+['\"]\\./monaco-editor['\"]"
+    ],
+    "mustMatch": [
+      "\\bimport\\(\\s*['\"]\\./monaco-editor['\"]"
+    ],
+    "notes": "Incorrect statically imports the heavy editor. Correct loads it with a dynamic import in a 'use client' module (next/dynamic, ssr:false). Targets the example's module path."
+  },
+  "client-event-listeners": {
+    "mustNotMatch": [
+      "addEventListener\\([^)]*\\)[\\s\\S]*?\\}\\s*,\\s*\\[[^\\]]*\\bcallback\\b"
+    ],
+    "notes": "Incorrect attaches a window listener in each component's effect and depends on the callback, so every instance adds its own listener. Correct shares one listener (useSWRSubscription in the example). Heuristic: a listener followed by an effect whose deps include callback."
+  },
+  "client-localstorage-schema": {
+    "mustNotMatch": [
+      "localStorage\\.setItem\\(\\s*['\"]"
+    ],
+    "mustMatch": [
+      "\\btry\\s*\\{",
+      "\\bVERSION\\b|\\bversion\\b|:v\\d+"
+    ],
+    "notes": "Incorrect writes an unversioned key with no error handling. Correct uses a versioned key and try/catch around storage. The migration path is not checked."
+  },
+  "client-passive-event-listeners": {
+    "mustNotMatch": [
+      "addEventListener\\(\\s*['\"](?:touchstart|touchmove|wheel|mousewheel)['\"]\\s*,\\s*\\w+\\s*\\)"
+    ],
+    "mustMatch": [
+      "\\bpassive:\\s*true\\b"
+    ],
+    "notes": "Incorrect registers touch and wheel listeners with no options, so they can block scrolling. Correct passes { passive: true }."
+  },
+  "client-swr-dedup": {
+    "mustNotMatch": [
+      "\\buseEffect\\([\\s\\S]*?\\bfetch\\("
+    ],
+    "mustMatch": [
+      "\\buseSWR\\("
+    ],
+    "notes": "Incorrect fetches in useEffect with no cache or dedupe. Correct uses useSWR, which caches and dedupes by key."
+  },
+  "js-batch-dom-css": {
+    "mustNotMatch": [
+      "\\.style\\.\\w+\\s*=[\\s\\S]*?\\b(?:offset(?:Width|Height|Top|Left)|client(?:Width|Height)|getBoundingClientRect|getComputedStyle)\\b[\\s\\S]*?\\.style\\.\\w+\\s*="
+    ],
+    "notes": "Incorrect interleaves style writes with layout reads (write, read, write), forcing a reflow each time. Correct writes first and reads once."
+  },
+  "js-cache-function-results": {
+    "mustMatch": [
+      "\\bnew\\s+Map\\b|\\b\\w*[Cc]ache\\w*\\.has\\("
+    ],
+    "notes": "Incorrect calls slugify once per item. Correct memoizes results in a module-level cache. Only checks that a cache exists, not that it is used on every call."
+  },
+  "js-cache-property-access": {
+    "mustNotMatch": [
+      "for\\s*\\([^)]*<\\s*[\\w.]+\\.length\\b"
+    ],
+    "notes": "Incorrect reads arr.length in the loop condition on every iteration. Correct hoists the length into a const. Hoisting of the deep property chain is not checked."
+  },
+  "bundle-conditional": {
+    "manual": true,
+    "notes": "No labelled Incorrect example in the rule file, so no seed and no selftest case. Label one (Phase C) before adding a regex spec."
+  },
+  "bundle-preload": {
+    "manual": true,
+    "notes": "No labelled Incorrect example in the rule file (two Correct examples only), so no seed and no selftest case. Label one before adding a regex spec."
+  },
+  "js-early-exit": {
+    "mustNotMatch": [
+      "\\bhasError\\s*=\\s*true\\b"
+    ],
+    "mustMatch": [
+      "\\breturn\\s*\\{\\s*valid:\\s*false\\b"
+    ],
+    "notes": "Incorrect loops over every user and sets flags. Correct returns on the first error."
+  },
+  "js-flatmap-filter": {
+    "mustNotMatch": [
+      "\\.map\\([\\s\\S]*?\\)\\s*\\.filter\\(\\s*Boolean\\s*\\)"
+    ],
+    "mustMatch": [
+      "\\.flatMap\\("
+    ],
+    "notes": "Incorrect maps to nulls and then filters with Boolean, two passes with an intermediate array. Correct uses flatMap in one pass."
+  },
+  "js-hoist-regexp": {
+    "mustNotMatch": [
+      "const\\s+\\w+\\s*=\\s*new\\s+RegExp\\("
+    ],
+    "notes": "Incorrect builds a RegExp directly in the render body on every render. Correct wraps it in useMemo or hoists a constant. A RegExp assigned inside useMemo is allowed."
+  },
+  "js-index-maps": {
+    "mustNotMatch": [
+      "\\.find\\(\\s*\\(?\\s*\\w+\\s*\\)?\\s*=>\\s*\\w+\\.id\\s*==="
+    ],
+    "mustMatch": [
+      "new\\s+Map\\("
+    ],
+    "notes": "Incorrect calls users.find per order (O(n*m)). Correct builds a Map once and looks up by key."
+  },
+  "js-length-check-first": {
+    "mustNotMatch": [
+      "\\.sort\\(\\)"
+    ],
+    "mustMatch": [
+      "\\.length\\s*!==?\\s*\\w+\\.length"
+    ],
+    "notes": "Incorrect always sorts (in place) and joins, even when lengths differ. Correct compares lengths first and sorts a copy (toSorted) only when they match."
+  },
+  "js-min-max-loop": {
+    "mustNotMatch": [
+      "\\.sort\\("
+    ],
+    "mustMatch": [
+      "\\bfor\\s*\\("
+    ],
+    "notes": "Incorrect sorts the whole array to find the latest or oldest item (O(n log n)). Correct makes one pass."
+  },
+  "js-request-idle-callback": {
+    "mustMatch": [
+      "\\brequestIdleCallback\\b"
+    ],
+    "notes": "Incorrect runs analytics, storage and prefetch synchronously in the handler. Correct defers non-critical work with requestIdleCallback. Only checks that idle scheduling is used."
+  },
+  "js-set-map-lookups": {
+    "mustNotMatch": [
+      "\\.filter\\([^)]*\\.includes\\("
+    ],
+    "mustMatch": [
+      "new\\s+Set\\(|\\.has\\("
+    ],
+    "notes": "Incorrect calls array.includes inside filter (O(n) per check). Correct uses a Set and .has()."
+  },
+  "js-tosorted-immutable": {
+    "mustNotMatch": [
+      "\\.sort\\("
+    ],
+    "mustMatch": [
+      "\\.toSorted\\("
+    ],
+    "notes": "Incorrect calls sort() on the users prop, which mutates it. Correct uses toSorted() (ES2023) to get a new array."
+  },
+  "js-combine-iterations": {
+    "mustNotMatch": [
+      "\\.filter\\([\\s\\S]*?\\.filter\\("
+    ],
+    "mustMatch": [
+      "for\\s*\\(\\s*const\\s+\\w+\\s+of\\s+"
+    ],
+    "notes": "Incorrect runs three filter passes over the same array. Correct makes one loop. A file with two unrelated filters would also fail."
+  },
+  "js-cache-storage": {
+    "mustNotMatch": [
+      "\\breturn\\s+localStorage\\.getItem\\("
+    ],
+    "mustMatch": [
+      "\\bnew\\s+Map\\b|\\b\\w*[Cc]ache\\w*\\.has\\("
+    ],
+    "notes": "Incorrect reads localStorage on every call. Correct caches reads in a Map and keeps it in sync on writes. Cache invalidation is not checked."
+  },
+  "rendering-activity": {
+    "manual": true,
+    "notes": "No labelled Incorrect example in the rule file (Correct only), so no seed and no selftest case."
+  },
+  "rendering-animate-svg-wrapper": {
+    "mustNotMatch": [
+      "<svg[^>]*className=[\"'][^\"']*animate-"
+    ],
+    "mustMatch": [
+      "<div[^>]*className=[\"']animate-"
+    ],
+    "notes": "Incorrect puts the animate-spin class on the svg, so the transform breaks the SVG's own box. Correct moves the class to a wrapping div."
+  },
+  "rendering-conditional-render": {
+    "mustNotMatch": [
+      "\\{\\s*\\w+\\s*&&\\s*<"
+    ],
+    "mustMatch": [
+      "\\?\\s*<[\\w.]+[\\s\\S]*?:\\s*null\\b"
+    ],
+    "notes": "Incorrect uses {count && <El/>}, which renders 0 when count is 0. Correct uses a ternary with an explicit null. Heuristic: any {x && <El/>} is flagged, including boolean x, which is safe."
+  },
+  "rendering-content-visibility": {
+    "manual": true,
+    "notes": "No labelled Incorrect example in the rule file (CSS and Correct only), so no seed and no selftest case."
+  },
+  "rendering-hoist-jsx": {
+    "mustMatch": [
+      "^const\\s+\\w+\\s*=\\s*\\(\\s*<"
+    ],
+    "notes": "Incorrect builds the static skeleton inside the component. Correct hoists it to a module-level JSX constant. Only checks that such a constant exists."
+  },
+  "rendering-hydration-no-flicker": {
+    "mustNotMatch": [
+      "\\bconst\\s+\\w+\\s*=\\s*localStorage\\.getItem\\("
+    ],
+    "mustMatch": [
+      "dangerouslySetInnerHTML|<script\\b"
+    ],
+    "notes": "Incorrect reads localStorage during render (throws on the server) or after hydration (flashes). Correct adds an inline script that sets the class before paint. Checks the first Incorrect example."
+  },
+  "rendering-hydration-suppress-warning": {
+    "mustMatch": [
+      "\\bsuppressHydrationWarning\\b"
+    ],
+    "notes": "Incorrect renders a time-dependent value with no suppression. Correct adds suppressHydrationWarning to that element only."
+  },
+  "rendering-resource-hints": {
+    "manual": true,
+    "notes": "No labelled Incorrect example in the rule file (Correct and When-to-use only), so no seed and no selftest case."
+  },
+  "rendering-script-defer-async": {
+    "mustNotMatch": [
+      "<script\\b(?![^>]*\\b(?:async|defer)\\b)[^>]*>"
+    ],
+    "mustMatch": [
+      "<script\\b[^>]*\\b(?:async|defer)\\b|<Script\\b[^>]*strategy="
+    ],
+    "notes": "Incorrect has plain script tags in RootLayout with no loading strategy. Correct sets async or defer (or uses next/script with a strategy)."
+  },
+  "rendering-svg-precision": {
+    "mustNotMatch": [
+      "\\d\\.\\d{3,}"
+    ],
+    "notes": "Incorrect path data has six-plus decimal places. Correct rounds to one decimal. Heuristic: any number with 3+ decimals is flagged."
+  },
+  "rendering-usetransition-loading": {
+    "mustNotMatch": [
+      "\\bset\\w*Loading\\(\\s*(?:true|false)\\s*\\)"
+    ],
+    "mustMatch": [
+      "\\buseTransition\\(|\\buseActionState\\("
+    ],
+    "notes": "Incorrect sets a manual loading flag around an await. Correct uses useTransition (isPending). Checks the first Incorrect example."
+  },
+  "rerender-defer-reads": {
+    "mustNotMatch": [
+      "\\buseSearchParams\\("
+    ],
+    "notes": "Incorrect subscribes to search params on every render, and reads them only in the click handler. Correct reads window.location inside the handler. Any useSearchParams call is flagged, even when the read moves into a handler."
+  },
+  "rerender-dependencies": {
+    "mustNotMatch": [
+      "\\}\\s*,\\s*\\[\\s*user\\s*\\]"
+    ],
+    "mustMatch": [
+      "\\}\\s*,\\s*\\[\\s*user\\.id\\s*\\]"
+    ],
+    "notes": "Incorrect depends on the whole user object but reads only user.id. Correct depends on user.id. Name-specific to the example."
+  },
+  "rerender-derived-state": {
+    "mustNotMatch": [
+      "\\buseWindowWidth\\("
+    ],
+    "mustMatch": [
+      "\\buseMediaQuery\\("
+    ],
+    "notes": "Incorrect subscribes to a continuously updating width and derives a boolean. Correct subscribes to the boolean with useMediaQuery. Name-specific to the example."
+  },
+  "rerender-derived-state-no-effect": {
+    "mustNotMatch": [
+      "\\buseEffect\\(\\s*\\(\\)\\s*=>\\s*\\{\\s*set[A-Z]\\w*\\("
+    ],
+    "notes": "Incorrect stores a value derived from other state and syncs it in an effect. Correct computes it during render. Heuristic: an effect whose first statement is a state setter."
+  },
+  "rerender-functional-setstate": {
+    "mustNotMatch": [
+      "\\}\\s*,\\s*\\[\\s*items\\s*\\]\\s*\\)"
+    ],
+    "mustMatch": [
+      "\\bset[A-Z]\\w*\\(\\s*\\(?\\s*\\w+\\s*\\)?\\s*=>"
+    ],
+    "notes": "Incorrect reads items inside setState callbacks and lists it in deps. Correct passes an updater function so the callbacks take no state dependency. Name-specific to the example."
+  },
+  "rerender-lazy-state-init": {
+    "mustNotMatch": [
+      "useState\\(\\s*(?!\\(\\s*\\)\\s*=>|function\\b)[\\w.]+\\("
+    ],
+    "mustMatch": [
+      "useState\\(\\s*\\(\\s*\\)\\s*=>"
+    ],
+    "notes": "Incorrect passes a call result to useState, which runs on every render. Correct passes an initializer function."
+  },
+  "rerender-memo": {
+    "mustNotMatch": [
+      "useMemo\\(\\s*\\(\\)\\s*=>\\s*\\{[^}]*?return\\s*<"
+    ],
+    "mustMatch": [
+      "\\bmemo\\("
+    ],
+    "notes": "Incorrect memoizes a JSX element with useMemo inside the parent. Correct extracts a memo()-wrapped child component."
+  },
+  "rerender-memo-with-default-value": {
+    "mustNotMatch": [
+      "\\w+\\s*=\\s*\\(\\s*\\)\\s*=>\\s*\\{\\s*\\}\\s*[,})]"
+    ],
+    "mustMatch": [
+      "\\bconst\\s+\\w+\\s*=\\s*\\(\\s*\\)\\s*=>\\s*\\{\\s*\\}"
+    ],
+    "notes": "Incorrect defaults an optional prop to an inline () => {}, a new function on every render. Correct uses a module-level NOOP constant."
+  },
+  "rerender-move-effect-to-event": {
+    "mustNotMatch": [
+      "\\buseEffect\\(\\(\\)\\s*=>\\s*\\{\\s*if\\s*\\(\\s*\\w+\\s*\\)"
+    ],
+    "notes": "Incorrect sets a flag in onClick, then an effect reacts to the flag to post and toast. Correct runs the action in the handler. Heuristic: an effect that starts with an if on a flag."
+  },
+  "rerender-no-inline-components": {
+    "mustNotMatch": [
+      "^[ \\t]+const\\s+[A-Z]\\w*\\s*=\\s*\\([^)]*\\)\\s*=>"
+    ],
+    "mustMatch": [
+      "^function\\s+[A-Z]\\w*\\s*\\("
+    ],
+    "notes": "Incorrect defines Avatar and Stats as arrow components inside UserProfile, so they remount on every render. Correct defines them at module level and passes props."
+  },
+  "rerender-simple-expression-in-memo": {
+    "mustNotMatch": [
+      "useMemo\\(\\s*\\(\\)\\s*=>\\s*(?:\\{\\s*return\\s+)?[\\w.]+\\s*(?:\\|\\||&&|\\+|===|!==|>=|<=|>|<)"
+    ],
+    "notes": "Incorrect wraps a single || of two booleans in useMemo. Correct computes it inline. Heuristic: a useMemo whose body is a simple binary expression."
+  },
+  "rerender-split-combined-hooks": {
+    "mustNotMatch": [
+      "useMemo\\(\\(\\)\\s*=>\\s*\\{[^}]*\\.filter\\([^}]*\\.(?:sort|toSorted)\\("
+    ],
+    "notes": "Incorrect filters and sorts in one useMemo, so a sortOrder change re-runs the filter. Correct splits it into two memos. Heuristic: one block-bodied useMemo that filters then sorts."
+  },
+  "rerender-transitions": {
+    "mustNotMatch": [
+      "=\\s*\\(\\s*\\)\\s*=>\\s*set[A-Z]\\w*\\("
+    ],
+    "mustMatch": [
+      "\\bstartTransition\\("
+    ],
+    "notes": "Incorrect calls the scroll setter directly on every scroll event. Correct wraps the update in startTransition."
+  },
+  "rerender-use-deferred-value": {
+    "mustMatch": [
+      "\\buseDeferredValue\\("
+    ],
+    "notes": "Incorrect filters on every keystroke. Correct defers the query with useDeferredValue. Only checks that the hook is used, not that it feeds the filter."
+  },
+  "rerender-use-ref-transient-values": {
+    "mustNotMatch": [
+      "\\bset[A-Z]\\w*\\(\\s*\\w+\\.(?:clientX|clientY|pageX|pageY|screenX|screenY)\\s*\\)"
+    ],
+    "mustMatch": [
+      "\\.current\\s*="
+    ],
+    "notes": "Incorrect stores mouse position in state on every mousemove, which re-renders the component. Correct keeps the value in a ref and writes the DOM directly."
+  },
+  "server-after-nonblocking": {
+    "mustNotMatch": [
+      "\\bawait\\s+log\\w*\\("
+    ],
+    "mustMatch": [
+      "\\bafter\\("
+    ],
+    "notes": "Incorrect awaits the logging call before responding. Correct schedules it with after() from next/server. Name-specific to the logger (log*)."
+  },
+  "server-async-request-apis": {
+    "mustNotMatch": [
+      "\\bcookies\\(\\)\\.",
+      "\\bheaders\\(\\)\\.",
+      "\\bparams\\.\\w+",
+      "\\bsearchParams\\.\\w+"
+    ],
+    "mustMatch": [
+      "\\bawait\\s+(?:params|searchParams|cookies\\(\\)|headers\\(\\))"
+    ],
+    "notes": "Incorrect reads params, searchParams, cookies() and headers() synchronously, which Next 16 rejects. Correct awaits each one."
+  },
+  "server-auth-actions": {
+    "mustMatch": [
+      "\\b(?:verifySession|getSession|auth)\\s*\\("
+    ],
+    "notes": "Incorrect is a 'use server' action with no session check. Correct verifies the session inside the action before mutating. Authorization logic and the proxy.ts note are not checked."
+  },
+  "server-cache-lru": {
+    "manual": true,
+    "notes": "No labelled Incorrect example in the rule file (Correct only), so no seed and no selftest case."
+  },
+  "server-cache-react": {
+    "mustNotMatch": [
+      "cache\\(\\s*async\\s*\\(\\s*\\w+\\s*:\\s*\\{"
+    ],
+    "notes": "Incorrect passes an inline object to a React cache()ed function, so every call misses the cache. Correct passes primitives. Heuristic: a cache()d async function whose parameter is an object literal type."
+  },
+  "server-connection-over-force-dynamic": {
+    "mustNotMatch": [
+      "export\\s+const\\s+dynamic\\s*=\\s*['\"]force-dynamic['\"]"
+    ],
+    "mustMatch": [
+      "\\bconnection\\(\\)"
+    ],
+    "notes": "Incorrect forces the whole route dynamic to read one request-time value. Correct awaits connection() inside a Suspense-wrapped child."
+  },
+  "server-dedup-props": {
+    "mustNotMatch": [
+      "=\\{\\s*\\w+\\.(?:toSorted|filter|map|sort|slice)\\("
+    ],
+    "notes": "Incorrect sends a derived copy of an array as a second prop, which RSC serialises again. Correct sends the source once and derives in the client."
+  },
+  "server-hoist-static-io": {
+    "mustNotMatch": [
+      "await\\s+readFile\\("
+    ],
+    "mustMatch": [
+      "^const\\s+\\w+\\s*=\\s*readFile\\("
+    ],
+    "notes": "Incorrect reads static assets with await on every request. Correct starts the read once at module scope and awaits the promise in the handler."
+  },
+  "server-no-shared-module-state": {
+    "mustNotMatch": [
+      "^let\\s+\\w+"
+    ],
+    "notes": "Incorrect writes a module-level let per request, which concurrent requests share. Correct passes the value down as a prop. Heuristic: any top-level let."
+  },
+  "server-parallel-fetching": {
+    "mustNotMatch": [
+      "async\\s+function\\s+Page\\s*\\([^)]*\\)\\s*\\{\\s*(?:const|let)\\s+\\w+\\s*=\\s*await\\b"
+    ],
+    "notes": "Incorrect awaits header data in Page before rendering the sidebar, so the two fetches run in sequence. Correct moves each fetch into its own async component. Name-specific to Page."
+  },
+  "server-parallel-nested-fetching": {
+    "mustNotMatch": [
+      "await\\s+Promise\\.all\\([\\s\\S]*?\\)\\s*\\n\\s*(?:const|let)\\s+\\w+\\s*=\\s*await\\s+Promise\\.all\\("
+    ],
+    "mustMatch": [
+      "\\.then\\("
+    ],
+    "notes": "Incorrect runs two Promise.all waves one after another (a waterfall). Correct chains the second fetch inside the first with .then()."
+  },
+  "server-serialization": {
+    "mustNotMatch": [
+      "<\\w+\\s+user=\\{user\\}\\s*/>"
+    ],
+    "notes": "Incorrect passes the whole user object to a client component that uses one field. Correct passes only the field it needs. Name-specific to the example."
+  },
+  "server-use-cache-directive": {
+    "mustMatch": [
+      "['\"]use cache['\"]"
+    ],
+    "notes": "Incorrect queries the database on every request for shared data. Correct moves the read into a function with the 'use cache' directive. cacheLife and cacheTag are not checked."
+  }
+}

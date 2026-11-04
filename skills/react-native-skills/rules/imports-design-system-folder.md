@@ -40,15 +40,21 @@ export function View(
 }
 ```
 
+**Correct (re-export a React Native component):**
+
 ```tsx
 // components/text.tsx
 export { Text } from 'react-native'
 ```
 
+**Correct (re-export a design system component):**
+
 ```tsx
 // components/button.tsx
 export { Button } from '@ui/button'
 ```
+
+**Correct (app code imports from the design system folder):**
 
 ```tsx
 import { View } from '@/components/view'

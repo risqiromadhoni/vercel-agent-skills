@@ -1,0 +1,85 @@
+name: "Skill bench: Tier 2 (manual)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      fw:
+        description: Framework fixture the agent works in
+        type: choice
+        options:
+          - nextjs
+          - tanstack-start
+        default: nextjs
+        required: true
+      skill:
+        description: Skill whose rules are evaluated
+        type: choice
+        options:
+          - react-best-practices
+          - composition-patterns
+        default: react-best-practices
+        required: true
+      model:
+        description: Claude model ID passed to claude --model
+        type: string
+        default: claude-sonnet-5-5
+        required: true
+      rules:
+        description: Optional comma-separated rule IDs (empty runs every seeded rule)
+        type: string
+        default: ''
+        required: false
+      build:
+        description: Also run the production build on each attempt
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    name: Eval ${{ inputs.skill }} on ${{ inputs.fw }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      BENCH_FW: ${{ inputs.fw }}
+      BENCH_SKILL: ${{ inputs.skill }}
+      BENCH_MODEL: ${{ inputs.model }}
+      BENCH_RULES: ${{ inputs.rules }}
+      BENCH_BUILD: ${{ inputs.build && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.24.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+          cache-dependency-path: |
+            packages/skill-bench/pnpm-lock.yaml
+            packages/skill-bench/fixtures/*/pnpm-lock.yaml
+      - name: Install bench dependencies
+        working-directory: packages/skill-bench
+        run: pnpm install --frozen-lockfile
+      - name: Install fixture dependencies
+        working-directory: packages/skill-bench
+        run: pnpm --dir fixtures/${{ inputs.fw }} install --frozen-lockfile
+      - name: Install Claude Code CLI
+        run: npm i -g @anthropic-ai/claude-code
+      - name: Run agent eval
+        working-directory: packages/skill-bench
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: pnpm eval
+      - name: Render report
+        working-directory: packages/skill-bench
+        run: pnpm report
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-bench-${{ inputs.fw }}-${{ inputs.skill }}
+          path: packages/skill-bench/results/
+          if-no-files-found: warn

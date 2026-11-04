@@ -20,6 +20,7 @@ export interface SkillConfig {
   rulesDir: string
   metadataFile: string
   outputFile: string
+  testCasesFile: string
   sectionMap: Record<string, number>
 }
 
@@ -32,6 +33,7 @@ export const SKILLS: Record<string, SkillConfig> = {
     rulesDir: join(SKILLS_DIR, 'react-best-practices/rules'),
     metadataFile: join(SKILLS_DIR, 'react-best-practices/metadata.json'),
     outputFile: join(SKILLS_DIR, 'react-best-practices/AGENTS.md'),
+    testCasesFile: join(BUILD_DIR, 'test-cases.json'),
     sectionMap: {
       async: 1,
       bundle: 2,
@@ -51,6 +53,7 @@ export const SKILLS: Record<string, SkillConfig> = {
     rulesDir: join(SKILLS_DIR, 'react-native-skills/rules'),
     metadataFile: join(SKILLS_DIR, 'react-native-skills/metadata.json'),
     outputFile: join(SKILLS_DIR, 'react-native-skills/AGENTS.md'),
+    testCasesFile: join(BUILD_DIR, 'test-cases.react-native-skills.json'),
     sectionMap: {
       rendering: 1,
       'list-performance': 2,
@@ -76,6 +79,7 @@ export const SKILLS: Record<string, SkillConfig> = {
     rulesDir: join(SKILLS_DIR, 'composition-patterns/rules'),
     metadataFile: join(SKILLS_DIR, 'composition-patterns/metadata.json'),
     outputFile: join(SKILLS_DIR, 'composition-patterns/AGENTS.md'),
+    testCasesFile: join(BUILD_DIR, 'test-cases.composition-patterns.json'),
     sectionMap: {
       architecture: 1,
       state: 2,

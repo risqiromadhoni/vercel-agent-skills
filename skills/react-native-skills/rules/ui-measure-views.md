@@ -12,7 +12,7 @@ measurement gives you the initial size immediately; `onLayout` keeps it current
 when the view changes. For non-primitive states, use a dispatch updater to
 compare values and avoid unnecessary re-renders.
 
-**Height only:**
+**Correct (height only):**
 
 ```tsx
 import { useLayoutEffect, useRef, useState } from 'react'
@@ -41,7 +41,7 @@ function MeasuredBox({ children }: { children: React.ReactNode }) {
 }
 ```
 
-**Both dimensions:**
+**Correct (both dimensions):**
 
 ```tsx
 import { useLayoutEffect, useRef, useState } from 'react'

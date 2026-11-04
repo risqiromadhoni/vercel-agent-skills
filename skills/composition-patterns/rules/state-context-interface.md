@@ -21,7 +21,7 @@ dependency-injectable.
 function ComposerInput() {
   // Tightly coupled to a specific hook
   const { input, setInput } = useChannelComposerState()
-  return <TextInput value={input} onChangeText={setInput} />
+  return <textarea value={input} onChange={(e) => setInput(e.target.value)} />
 }
 ```
 
@@ -41,7 +41,7 @@ interface ComposerActions {
 }
 
 interface ComposerMeta {
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<HTMLTextAreaElement | null>
 }
 
 interface ComposerContextValue {
@@ -51,6 +51,14 @@ interface ComposerContextValue {
 }
 
 const ComposerContext = createContext<ComposerContextValue | null>(null)
+
+// Read the context through this hook, not use(ComposerContext) directly.
+// It throws outside a provider, so callers always get a non-null value.
+function useComposer() {
+  const ctx = use(ComposerContext)
+  if (!ctx) throw new Error('useComposer must be used within a ComposerProvider')
+  return ctx
+}
 ```
 
 **UI components consume the interface, not the implementation:**
@@ -61,14 +69,14 @@ function ComposerInput() {
     state,
     actions: { update },
     meta,
-  } = use(ComposerContext)
+  } = useComposer()
 
   // This component works with ANY provider that implements the interface
   return (
-    <TextInput
+    <textarea
       ref={meta.inputRef}
       value={state.input}
-      onChangeText={(text) => update((s) => ({ ...s, input: text }))}
+      onChange={(e) => update((s) => ({ ...s, input: e.target.value }))}
     />
   )
 }
@@ -80,7 +88,7 @@ function ComposerInput() {
 // Provider A: Local state for ephemeral forms
 function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(initialState)
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const submit = useForwardMessage()
 
   return (
@@ -97,9 +105,16 @@ function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Provider B: Global synced state for channels
-function ChannelProvider({ channelId, children }: Props) {
+function ChannelProvider({
+  channelId,
+  children,
+}: {
+  channelId: string
+  children: React.ReactNode
+}) {
+  // Stub signature: useGlobalChannel(channelId: string) => { state: ComposerState; update: ComposerActions['update']; submit: ComposerActions['submit'] }
   const { state, update, submit } = useGlobalChannel(channelId)
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   return (
     <ComposerContext
@@ -172,13 +187,13 @@ function ForwardMessageDialog() {
 function ForwardButton() {
   const {
     actions: { submit },
-  } = use(ComposerContext)
-  return <Button onPress={submit}>Forward</Button>
+  } = useComposer()
+  return <button onClick={submit}>Forward</button>
 }
 
 // This preview lives OUTSIDE Composer.Frame but can read composer's state!
 function MessagePreview() {
-  const { state } = use(ComposerContext)
+  const { state } = useComposer()
   return <Preview message={state.input} attachments={state.attachments} />
 }
 ```
@@ -189,3 +204,5 @@ lifting state into providers.
 
 The UI is reusable bits you compose together. The state is dependency-injected
 by the provider. Swap the provider, keep the UI.
+
+Reference: [Passing Data Deeply with Context](https://react.dev/learn/passing-data-deeply-with-context), [createContext](https://react.dev/reference/react/createContext), [use](https://react.dev/reference/react/use)

@@ -48,6 +48,7 @@ function Page() {
   )
 }
 
+// Server Component: async, awaits its own data
 async function DataDisplay() {
   const data = await fetchData() // Only blocks this component
   return <div>{data.content}</div>
@@ -56,9 +57,13 @@ async function DataDisplay() {
 
 Sidebar, Header, and Footer render immediately. Only DataDisplay waits for data.
 
-**Alternative (share promise across components):**
+**Alternative (share promise across components, Server Component part):**
 
 ```tsx
+import { Suspense } from 'react'
+import { DataDisplay, DataSummary } from './data-views.client'
+
+// Server Component (no 'use client'): starts the fetch without awaiting it
 function Page() {
   // Start fetch immediately, but don't await
   const dataPromise = fetchData()
@@ -75,13 +80,22 @@ function Page() {
     </div>
   )
 }
+```
 
-function DataDisplay({ dataPromise }: { dataPromise: Promise<Data> }) {
+**Alternative (share promise across components, Client Component part):**
+
+```tsx
+'use client'
+
+import { use } from 'react'
+
+// Client Components: receive the promise as a prop and unwrap it with use()
+export function DataDisplay({ dataPromise }: { dataPromise: Promise<Data> }) {
   const data = use(dataPromise) // Unwraps the promise
   return <div>{data.content}</div>
 }
 
-function DataSummary({ dataPromise }: { dataPromise: Promise<Data> }) {
+export function DataSummary({ dataPromise }: { dataPromise: Promise<Data> }) {
   const data = use(dataPromise) // Reuses the same promise
   return <div>{data.summary}</div>
 }

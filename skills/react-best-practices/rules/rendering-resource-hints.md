@@ -18,7 +18,7 @@ React DOM provides APIs to hint the browser about resources it will need. These 
 - **`preinit(href, options)`**: Fetch and evaluate a stylesheet or script
 - **`preinitModule(href)`**: Fetch and evaluate an ES module
 
-**Example (preconnect to third-party APIs):**
+**Correct (preconnect to third-party APIs):**
 
 ```tsx
 import { preconnect, prefetchDNS } from 'react-dom'
@@ -31,7 +31,7 @@ export default function App() {
 }
 ```
 
-**Example (preload critical fonts and styles):**
+**Correct (preload critical fonts and styles):**
 
 ```tsx
 import { preload, preinit } from 'react-dom'
@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-**Example (preload modules for code-split routes):**
+**Correct (preload modules for code-split routes):**
 
 ```tsx
 import { preloadModule, preinitModule } from 'react-dom'

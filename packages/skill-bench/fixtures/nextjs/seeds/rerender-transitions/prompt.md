@@ -1,0 +1,1 @@
+You are working in a Next.js 16 App Router project. Review `src/seed/seed.tsx` for React and framework performance problems (waterfalls, bundle size, server/client data handling, re-renders, rendering cost) and fix them in place. Keep behaviour identical. Run `pnpm typecheck` and make it pass. Do not touch other files.
